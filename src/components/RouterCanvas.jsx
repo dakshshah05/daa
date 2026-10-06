@@ -20,9 +20,7 @@ export function RouterCanvas({
   const [isDragging, setIsDragging] = useState(false);
   const [dragTarget, setDragTarget] = useState(null); // 'depot' | index
   const animPhaseRef = useRef(0);
-  const lastVisitedStepRef = useRef(-1);
 
-  // Colors and themes
   const getNodeColor = (weight) => {
     if (weight >= 9) return { bg: '#ef4444', glow: 'rgba(239, 68, 68, 0.65)', border: '#fca5a5' };
     if (weight >= 7) return { bg: '#f97316', glow: 'rgba(249, 115, 22, 0.55)', border: '#fdba74' };
@@ -30,9 +28,8 @@ export function RouterCanvas({
     return { bg: '#10b981', glow: 'rgba(16, 185, 129, 0.45)', border: '#6ee7b7' };
   };
 
-  const getNodeRadius = (weight) => 12 + ((weight - 1) / 9) * 10;
+  const getNodeRadius = (weight) => 12 + ((weight - 1) / 9) * 8;
 
-  // Coordinate mapping
   const getCoords = (e) => {
     const canvas = canvasRef.current;
     if (!canvas) return { x: 0, y: 0 };
@@ -45,7 +42,7 @@ export function RouterCanvas({
     };
   };
 
-  const findNodeAt = (x, y, hitRadius = 24) => {
+  const findNodeAt = (x, y, hitRadius = 22) => {
     const dDepot = Math.hypot(depot.x - x, depot.y - y);
     if (dDepot <= hitRadius) return { type: 'depot', index: -1 };
 
@@ -58,7 +55,6 @@ export function RouterCanvas({
     return null;
   };
 
-  // Mouse / Touch Handlers
   const handleMouseDown = (e) => {
     if (e.button && e.button !== 0) return;
     const { x, y } = getCoords(e);
@@ -74,7 +70,6 @@ export function RouterCanvas({
         setSelectedNodeIndex(-1);
       }
     } else {
-      // Add node if within limits
       if (locations.length >= 20) return;
       const id = locations.length + 1;
       const types = ['hospital', 'clinic', 'shelter'];
@@ -163,7 +158,6 @@ export function RouterCanvas({
     }
   };
 
-  // Main Canvas Render Loop
   useEffect(() => {
     let animationFrameId;
     const canvas = canvasRef.current;
@@ -171,10 +165,9 @@ export function RouterCanvas({
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
 
-    const render = (timestamp) => {
+    const render = () => {
       animPhaseRef.current = (animPhaseRef.current + 0.04) % (Math.PI * 2);
 
-      // Handle resize
       const rect = canvas.getBoundingClientRect();
       if (canvas.width !== rect.width * dpr || canvas.height !== rect.height * dpr) {
         canvas.width = rect.width * dpr;
@@ -186,8 +179,8 @@ export function RouterCanvas({
       const w = rect.width;
       const h = rect.height;
 
-      // 1. Background Grid & Radar Sweep
-      ctx.fillStyle = '#090e18';
+      // 1. Background Grid
+      ctx.fillStyle = '#080d17';
       ctx.fillRect(0, 0, w, h);
 
       ctx.save();
@@ -205,10 +198,10 @@ export function RouterCanvas({
       }
       ctx.stroke();
 
-      // Atmospheric gradient
+      // Atmospheric radial gradient
       const bgGrad = ctx.createRadialGradient(depot.x, depot.y, 20, depot.x, depot.y, Math.max(w, h));
-      bgGrad.addColorStop(0, 'rgba(6, 182, 212, 0.05)');
-      bgGrad.addColorStop(1, 'rgba(15, 23, 42, 0)');
+      bgGrad.addColorStop(0, 'rgba(6, 182, 212, 0.06)');
+      bgGrad.addColorStop(1, 'rgba(8, 13, 23, 0)');
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, w, h);
       ctx.restore();
@@ -216,7 +209,7 @@ export function RouterCanvas({
       // 2. Mesh connections
       if (locations.length > 1) {
         ctx.save();
-        ctx.strokeStyle = 'rgba(51, 65, 85, 0.18)';
+        ctx.strokeStyle = 'rgba(51, 65, 85, 0.16)';
         ctx.lineWidth = 1;
         ctx.setLineDash([3, 5]);
         ctx.beginPath();
@@ -281,7 +274,6 @@ export function RouterCanvas({
         }
         ctx.stroke();
 
-        // Directional arrows
         for (let i = 0; i < pts.length - 1; i++) {
           const midX = (pts[i].x + pts[i + 1].x) / 2;
           const midY = (pts[i].y + pts[i + 1].y) / 2;
@@ -309,7 +301,6 @@ export function RouterCanvas({
         const col = getNodeColor(loc.weight);
 
         ctx.save();
-        // Pulsing critical aura
         if (loc.weight >= 9) {
           const pulse = (Math.sin(animPhaseRef.current * 2.5) + 1) / 2;
           ctx.beginPath();
@@ -318,17 +309,15 @@ export function RouterCanvas({
           ctx.fill();
         }
 
-        // Selection halo
         if (isSelected) {
           ctx.beginPath();
-          ctx.arc(loc.x, loc.y, r + 8, 0, Math.PI * 2);
+          ctx.arc(loc.x, loc.y, r + 7, 0, Math.PI * 2);
           ctx.strokeStyle = '#38bdf8';
           ctx.lineWidth = 2.5;
           ctx.setLineDash([4, 4]);
           ctx.stroke();
         }
 
-        // Main Node Circle
         ctx.beginPath();
         ctx.arc(loc.x, loc.y, r, 0, Math.PI * 2);
         ctx.fillStyle = col.bg;
@@ -340,34 +329,31 @@ export function RouterCanvas({
         ctx.lineWidth = isSelected ? 3 : 2;
         ctx.stroke();
 
-        // Inner Urgency Tag
         ctx.shadowBlur = 0;
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 11px JetBrains Mono, sans-serif';
+        ctx.font = 'bold 10px JetBrains Mono, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(`W${loc.weight}`, loc.x, loc.y);
 
-        // Facility Name
-        ctx.font = '500 11px Inter, sans-serif';
+        ctx.font = '500 10.5px Inter, sans-serif';
         ctx.fillStyle = '#cbd5e1';
-        ctx.fillText(loc.name, loc.x, loc.y + r + 14);
+        ctx.fillText(loc.name, loc.x, loc.y + r + 13);
 
-        // Step number badge if in primary route
         const activeSol = activeRoutes?.[currentSolver] || activeRoutes?.dp || activeRoutes?.greedy;
         if (activeSol?.order) {
           const stepIndex = activeSol.order.indexOf(idx);
           if (stepIndex !== -1) {
             ctx.beginPath();
-            ctx.arc(loc.x - r * 0.7, loc.y - r * 0.7, 9, 0, Math.PI * 2);
-            ctx.fillStyle = '#090e18';
+            ctx.arc(loc.x - r * 0.7, loc.y - r * 0.7, 8.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#080d17';
             ctx.fill();
             ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1.8;
             ctx.stroke();
 
             ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 9px JetBrains Mono, sans-serif';
+            ctx.font = 'bold 8.5px JetBrains Mono, sans-serif';
             ctx.fillText(`${stepIndex + 1}`, loc.x - r * 0.7, loc.y - r * 0.7);
           }
         }
@@ -376,14 +362,14 @@ export function RouterCanvas({
 
       // 5. Depot Marker
       ctx.save();
-      const radarR = 24 + Math.sin(animPhaseRef.current) * 6;
+      const radarR = 22 + Math.sin(animPhaseRef.current) * 6;
       ctx.beginPath();
       ctx.arc(depot.x, depot.y, radarR, 0, Math.PI * 2);
       ctx.strokeStyle = 'rgba(234, 179, 8, 0.35)';
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      const dSize = 18;
+      const dSize = 16;
       ctx.beginPath();
       ctx.moveTo(depot.x, depot.y - dSize);
       ctx.lineTo(depot.x + dSize, depot.y);
@@ -392,29 +378,29 @@ export function RouterCanvas({
       ctx.closePath();
       ctx.fillStyle = '#eab308';
       ctx.shadowColor = 'rgba(234, 179, 8, 0.8)';
-      ctx.shadowBlur = 18;
+      ctx.shadowBlur = 16;
       ctx.fill();
       ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2.2;
       ctx.stroke();
 
       ctx.shadowBlur = 0;
-      ctx.fillStyle = '#090e18';
-      ctx.font = 'bold 11px Inter, sans-serif';
+      ctx.fillStyle = '#080d17';
+      ctx.font = 'bold 10.5px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('HQ', depot.x, depot.y);
 
-      ctx.font = '600 12px Inter, sans-serif';
+      ctx.font = '600 11.5px Inter, sans-serif';
       ctx.fillStyle = '#fde047';
-      ctx.fillText(depot.name || 'HQ Relief Hub', depot.x, depot.y + dSize + 16);
+      ctx.fillText(depot.name || 'HQ Relief Hub', depot.x, depot.y + dSize + 15);
       ctx.restore();
 
       // 6. Live Vehicle Animation Step
       if (vehicleAnim && vehicleAnim.running && !vehicleAnim.paused) {
         const seg = vehicleAnim.segments[vehicleAnim.segmentIdx];
         if (seg) {
-          const delta = 0.016; // 60fps delta
+          const delta = 0.016;
           vehicleAnim.segmentProgress += delta / seg.duration;
           vehicleAnim.liveTime += delta;
 
@@ -422,7 +408,6 @@ export function RouterCanvas({
             vehicleAnim.segmentProgress = 0;
             vehicleAnim.segmentIdx++;
 
-            // Trigger audio blip on node visit
             if (seg.loc?.weight) {
               sounds.playNodeVisit(seg.loc.weight);
             }
@@ -433,7 +418,6 @@ export function RouterCanvas({
             }
           }
 
-          // Calculate interpolated vehicle position
           const t = Math.max(0, Math.min(1, vehicleAnim.segmentProgress));
           const vx = seg.from.x + (seg.to.x - seg.from.x) * t;
           const vy = seg.from.y + (seg.to.y - seg.from.y) * t;
@@ -443,34 +427,31 @@ export function RouterCanvas({
           ctx.translate(vx, vy);
           ctx.rotate(angle);
 
-          // Headlight cone
-          const grad = ctx.createRadialGradient(10, 0, 2, 45, 0, 35);
+          const grad = ctx.createRadialGradient(10, 0, 2, 42, 0, 32);
           grad.addColorStop(0, 'rgba(56, 189, 248, 0.6)');
           grad.addColorStop(1, 'rgba(56, 189, 248, 0)');
           ctx.fillStyle = grad;
           ctx.beginPath();
-          ctx.moveTo(10, -8);
-          ctx.lineTo(45, -22);
-          ctx.lineTo(45, 22);
-          ctx.lineTo(10, 8);
+          ctx.moveTo(10, -7);
+          ctx.lineTo(42, -20);
+          ctx.lineTo(42, 20);
+          ctx.lineTo(10, 7);
           ctx.closePath();
           ctx.fill();
 
-          // Ambulance drone body
           ctx.fillStyle = '#f8fafc';
           ctx.shadowColor = '#38bdf8';
-          ctx.shadowBlur = 15;
+          ctx.shadowBlur = 14;
           ctx.beginPath();
-          ctx.roundRect(-16, -10, 32, 20, [4, 8, 8, 4]);
+          ctx.roundRect(-15, -9, 30, 18, [3, 7, 7, 3]);
           ctx.fill();
           ctx.strokeStyle = '#0284c7';
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 1.8;
           ctx.stroke();
 
-          // Emergency beacon
           const isRed = Math.floor(animPhaseRef.current * 8) % 2 === 0;
           ctx.beginPath();
-          ctx.arc(0, 0, 4, 0, Math.PI * 2);
+          ctx.arc(0, 0, 3.5, 0, Math.PI * 2);
           ctx.fillStyle = isRed ? '#ef4444' : '#38bdf8';
           ctx.shadowColor = isRed ? '#ef4444' : '#38bdf8';
           ctx.shadowBlur = 10;
@@ -504,8 +485,8 @@ export function RouterCanvas({
 
       <div className="canvas-hud-overlay">
         <div className="hud-pill">
-          <span>Action Guide:</span>
-          <strong>Click to Add | Drag to Move | R-Click to Delete</strong>
+          <span>Guide:</span>
+          <strong>Click: Add | Drag: Move | R-Click: Delete</strong>
         </div>
       </div>
 

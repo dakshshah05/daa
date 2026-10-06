@@ -8,16 +8,17 @@ import { DPStepThrough } from './components/DPStepThrough';
 import { BenchmarkSuite } from './components/BenchmarkSuite';
 import { TheorySection } from './components/TheorySection';
 import { PracticalUseSection } from './components/PracticalUseSection';
+import { TeacherWalkthroughModal } from './components/TeacherWalkthroughModal';
 import { PRESET_SCENARIOS } from './algorithms/presets';
 import { RouteSolvers } from './algorithms/solvers';
 import { sounds } from './utils/soundEffects';
-import { Dices, Trash2, CheckCircle2, Sparkles } from 'lucide-react';
+import { Dices, Trash2, Sparkles, GraduationCap } from 'lucide-react';
 
 export function App() {
   const [activeTab, setActiveTab] = useState('canvas');
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [currentPresetId, setCurrentPresetId] = useState('greedy_trap');
-  const [depot, setDepot] = useState({ x: 180, y: 340, name: 'Central Relief Depot' });
+  const [depot, setDepot] = useState({ x: 140, y: 280, name: 'Central Relief Depot' });
   const [locations, setLocations] = useState([]);
   const [speed, setSpeed] = useState(120);
   const [selectedNodeIndex, setSelectedNodeIndex] = useState(-1);
@@ -29,6 +30,7 @@ export function App() {
   const [activeRoutes, setActiveRoutes] = useState(null);
   const [vehicleAnim, setVehicleAnim] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
+  const [isTeacherGuideOpen, setIsTeacherGuideOpen] = useState(false);
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -78,9 +80,9 @@ export function App() {
 
   const handleGenerateRandom = () => {
     sounds.playClick();
-    const padding = 70;
-    const w = 780;
-    const h = 480;
+    const padding = 60;
+    const w = 700;
+    const h = 420;
 
     const newDepot = {
       x: Math.round(padding + Math.random() * (w - 2 * padding)),
@@ -128,7 +130,6 @@ export function App() {
 
       if (e.code === 'Space') {
         e.preventDefault();
-        // Trigger animation
         const btn = document.querySelector('.telemetry-ribbon .btn-primary');
         if (btn) btn.click();
       } else if (e.key === 'r' || e.key === 'R') {
@@ -164,6 +165,7 @@ export function App() {
         setActiveTab={setActiveTab}
         audioEnabled={audioEnabled}
         setAudioEnabled={setAudioEnabled}
+        onOpenTeacherGuide={() => setIsTeacherGuideOpen(true)}
       />
 
       <main className="main-content">
@@ -171,18 +173,18 @@ export function App() {
           <div className="router-layout-grid">
             
             {/* Left Stage */}
-            <section style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <section style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem', minWidth: 0 }}>
               
-              {/* Presets & Random Bar */}
-              <div className="stage-card" style={{ padding: '0.75rem 1.25rem' }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
+              {/* Presets & Random Bento Bar */}
+              <div className="stage-card" style={{ padding: '0.65rem 1rem' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.6rem' }}>
                   
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flex: 1, minWidth: '280px' }}>
-                    <label htmlFor="preset-select-dropdown" style={{ fontSize: '0.84rem', fontWeight: 700, color: '#fff' }}>Preset:</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: '260px' }}>
+                    <label htmlFor="preset-select-dropdown" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>Preset:</label>
                     <select
                       id="preset-select-dropdown"
                       className="form-select"
-                      style={{ flex: 1 }}
+                      style={{ flex: 1, padding: '0.35rem 0.65rem', fontSize: '0.78rem' }}
                       value={currentPresetId}
                       onChange={(e) => loadPresetById(e.target.value)}
                     >
@@ -192,14 +194,14 @@ export function App() {
                     </select>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                      <label htmlFor="random-n-field" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>n =</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <label htmlFor="random-n-field" style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>n =</label>
                       <input
                         type="number"
                         id="random-n-field"
                         className="form-input"
-                        style={{ width: '55px', textAlign: 'center' }}
+                        style={{ width: '48px', padding: '0.35rem 0.2rem', textAlign: 'center', fontSize: '0.78rem' }}
                         min="3"
                         max="18"
                         value={randomN}
@@ -207,17 +209,17 @@ export function App() {
                       />
                     </div>
                     <button className="btn btn-secondary btn-sm" onClick={handleGenerateRandom}>
-                      <Dices size={14} /> Random
+                      <Dices size={13} /> Random
                     </button>
                     <button className="btn btn-outline btn-sm" onClick={handleClear}>
-                      <Trash2 size={14} /> Clear
+                      <Trash2 size={13} /> Clear
                     </button>
                   </div>
 
                 </div>
 
                 {currentPreset && (
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '0.35rem' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
                     {currentPreset.description}
                   </div>
                 )}
@@ -254,6 +256,7 @@ export function App() {
               <ResultsComparison
                 allSol={activeRoutes}
                 currentSolver={currentSolver}
+                onOpenTeacherGuide={() => setIsTeacherGuideOpen(true)}
               />
 
             </section>
@@ -301,10 +304,18 @@ export function App() {
         )}
       </main>
 
+      {/* Presentation Walkthrough Modal for Teachers */}
+      <TeacherWalkthroughModal
+        isOpen={isTeacherGuideOpen}
+        onClose={() => setIsTeacherGuideOpen(false)}
+        onLoadPreset={loadPresetById}
+        setActiveTab={setActiveTab}
+      />
+
       {/* Floating Toast Notification */}
       {toastMessage && (
         <div className="toast-box">
-          <Sparkles size={16} color="#38bdf8" />
+          <Sparkles size={15} color="#38bdf8" />
           <span>{toastMessage}</span>
         </div>
       )}

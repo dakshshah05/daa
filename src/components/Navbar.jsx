@@ -9,11 +9,12 @@ import {
   Volume2, 
   VolumeX, 
   Github,
+  GraduationCap,
   Sparkles
 } from 'lucide-react';
 import { sounds } from '../utils/soundEffects';
 
-export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled }) {
+export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled, onOpenTeacherGuide }) {
   const tabs = [
     { id: 'canvas', label: 'Command Canvas', icon: MapPin },
     { id: 'dp-stepper', label: 'DP Bitmask Debugger', icon: Cpu },
@@ -37,16 +38,16 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled 
     <header className="navbar">
       <div className="brand-section">
         <div className="brand-icon-box">
-          <Ambulance size={24} />
+          <Ambulance size={22} />
         </div>
         <div>
           <div className="brand-title">
             GoldenHour Router
-            <span className="badge badge-warning" style={{ fontSize: '0.65rem' }}>
-              <Sparkles size={10} /> DAA Pro
+            <span className="badge badge-pro">
+              <Sparkles size={11} /> DAA CIA
             </span>
           </div>
-          <div className="brand-subtitle">Minimum Weighted Latency Emergency Dispatcher</div>
+          <div className="brand-subtitle">Emergency Triage & Weighted Latency Optimizer</div>
         </div>
       </div>
 
@@ -62,7 +63,7 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled 
               role="tab"
               aria-selected={isActive}
             >
-              <Icon size={16} />
+              <Icon size={15} />
               <span>{tab.label}</span>
             </button>
           );
@@ -70,12 +71,25 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled 
       </nav>
 
       <div className="navbar-actions">
+        {/* Presentation Mode Button for Teachers */}
+        <button
+          className="btn btn-presentation"
+          onClick={() => {
+            sounds.playClick();
+            onOpenTeacherGuide();
+          }}
+          title="Open Academic Presentation Walkthrough"
+        >
+          <GraduationCap size={16} />
+          <span>Teacher Mode</span>
+        </button>
+
         <button
           className="icon-action-btn"
           onClick={handleAudioToggle}
-          title={audioEnabled ? 'Mute Sound Effects' : 'Enable Sound FX (Web Audio API)'}
+          title={audioEnabled ? 'Mute Audio FX' : 'Enable Audio FX (Web Audio Synth)'}
         >
-          {audioEnabled ? <Volume2 size={18} color="#10b981" /> : <VolumeX size={18} color="#64748b" />}
+          {audioEnabled ? <Volume2 size={16} color="#10b981" /> : <VolumeX size={16} color="#64748b" />}
         </button>
 
         <a
@@ -83,9 +97,9 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled 
           target="_blank"
           rel="noopener noreferrer"
           className="icon-action-btn"
-          title="View on GitHub"
+          title="GitHub Repository"
         >
-          <Github size={18} />
+          <Github size={16} />
         </a>
       </div>
     </header>
