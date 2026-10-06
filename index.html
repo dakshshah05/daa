@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoldenHour Router | Minimum Weighted Latency Solver & Triage Optimizer</title>
+  <meta name="description" content="Interactive emergency relief vehicle router optimizing weighted arrival latency using Dynamic Programming with Bitmask, Branch & Bound, and Greedy heuristics.">
+
+  <!-- Favicon / Brand Symbol -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚑</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/canvas.css">
+  <link rel="stylesheet" href="css/dp-stepper.css">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- KaTeX for Crisp Mathematical Formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+
+  <!-- ==========================================
+       Header & Navigation Bar
+       ========================================== -->
+  <header class="app-header">
+    <div class="brand-container">
+      <div class="brand-logo">🚑</div>
+      <div class="brand-title">
+        <h1>GoldenHour Router</h1>
+        <p>Minimum Weighted Latency & Emergency Dispatch Optimizer</p>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" role="tablist">
+      <button class="nav-tab-btn active" data-tab="canvas" role="tab" id="tab-btn-canvas">
+        <span>🗺️</span> Router Canvas
+      </button>
+      <button class="nav-tab-btn" data-tab="dp-stepper" role="tab" id="tab-btn-stepper">
+        <span>🔍</span> DP Step-Through
+      </button>
+      <button class="nav-tab-btn" data-tab="benchmark" role="tab" id="tab-btn-benchmark">
+        <span>📊</span> Benchmark Suite
+      </button>
+      <button class="nav-tab-btn" data-tab="theory" role="tab" id="tab-btn-theory">
+        <span>📚</span> Theory & Proofs
+      </button>
+      <button class="nav-tab-btn" data-tab="practical" role="tab" id="tab-btn-practical">
+        <span>🚑</span> Real-World Triage
+      </button>
+    </nav>
+  </header>
+
+  <!-- ==========================================
+       TAB 1: Interactive Router & Canvas
+       ========================================== -->
+  <main class="tab-pane active" id="tab-canvas">
+    <div class="router-layout">
+      
+      <!-- Left Main Stage: Canvas + Telemetry + Sequence -->
+      <section class="canvas-stage">
+        
+        <!-- Top Toolbar -->
+        <div class="canvas-toolbar">
+          <div class="preset-picker-group">
+            <label for="preset-select"><strong>Preset:</strong></label>
+            <select id="preset-select" class="form-select">
+              <!-- Populated by JS -->
+            </select>
+          </div>
+
+          <div class="toolbar-group">
+            <div class="random-input-group">
+              <label for="random-n-input">n =</label>
+              <input type="number" id="random-n-input" class="form-input" min="3" max="18" value="8">
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-random">🎲 Random</button>
+            <button class="btn btn-outline btn-sm" id="btn-clear">🧹 Clear</button>
+          </div>
+        </div>
+
+        <!-- Preset Description Alert -->
+        <div class="preset-desc-bar" id="preset-description" style="font-size:0.8rem; color:var(--text-secondary); padding:0 0.5rem;">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Canvas Viewport -->
+        <div class="canvas-viewport-wrapper">
+          <canvas id="map-canvas"></canvas>
+
+          <!-- Floating HUD Info -->
+          <div class="canvas-hud-top-right">
+            <div class="hud-pill">
+              <span>Canvas Instructions:</span>
+              <strong>Click: Add | Drag: Move | R-Click: Delete</strong>
+            </div>
+          </div>
+
+          <div class="hud-legend">
+            <div class="legend-item"><span class="legend-dot dp"></span> <span>DP Optimal (Emerald)</span></div>
+            <div class="legend-item"><span class="legend-dot bb"></span> <span>Branch & Bound (Cyan)</span></div>
+            <div class="legend-item"><span class="legend-dot greedy"></span> <span>Greedy Heuristic (Amber)</span></div>
+            <div class="legend-item"><span class="legend-dot crit"></span> <span>Urgency W=9-10 (Critical)</span></div>
+          </div>
+        </div>
+
+        <!-- Live Vehicle Telemetry Bar -->
+        <div class="telemetry-strip">
+          <div class="telemetry-controls">
+            <button class="btn btn-primary" id="btn-play-anim">🚀 Animate Vehicle</button>
+            <button class="btn btn-secondary btn-sm" id="btn-pause-anim">⏸️ Pause</button>
+            <button class="btn btn-outline btn-sm" id="btn-stop-anim">⏹️ Reset</button>
+          </div>
+
+          <div class="telemetry-stats">
+            <div class="stat-metric">
+              <span class="stat-label">Live Step</span>
+              <span class="stat-val" id="live-step-ticker">Standby</span>
+            </div>
+            <div class="stat-metric">
+              <span class="stat-label">Elapsed Time</span>
+              <span class="stat-val" id="live-time-ticker">0.0s</span>
+            </div>
+            <div class="stat-metric">
+              <span class="stat-label">Weighted Delay Penalty</span>
+              <span class="stat-val highlight" id="live-delay-ticker">0.0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Route Sequence Timeline -->
+        <div class="route-sequence-panel">
+          <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.4rem;">
+            Optimal Visiting Sequence
+          </div>
+          <div id="route-sequence-display">
+            <!-- Dynamic route chips -->
+          </div>
+        </div>
+
+        <!-- Results Comparison Box -->
+        <div class="results-card">
+          <div class="results-card-header">
+            <h3>Solvers Performance & Optimality Gap</h3>
+          </div>
+
+          <div id="greedy-trap-notice" class="alert-notice" style="display:none;"></div>
+
+          <div class="compare-table-wrapper">
+            <table class="compare-results-table">
+              <thead>
+                <tr>
+                  <th>Algorithm</th>
+                  <th>Weighted Delay Cost (Σ wᵢ·tᵢ)</th>
+                  <th>Runtime</th>
+                  <th>States / Nodes</th>
+                  <th>Memory Est.</th>
+                  <th>Optimality Gap</th>
+                </tr>
+              </thead>
+              <tbody id="results-comparison-tbody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Sidebar: Solver Controls & Node Weight Editor -->
+      <aside class="sidebar-panel">
+        
+        <!-- Solver Mode Card -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">
+            <span>⚙️ Solver Configuration</span>
+          </div>
+
+          <div class="solver-choice-group">
+            <button class="solver-choice-btn active" data-solver="dp">DP (Bitmask)</button>
+            <button class="solver-choice-btn" data-solver="backtracking">Branch & Bound</button>
+            <button class="solver-choice-btn" data-solver="greedy">Greedy</button>
+          </div>
+
+          <div class="toggle-switch-row">
+            <label for="toggle-pruning">Enable B&B Pruning</label>
+            <input type="checkbox" id="toggle-pruning" checked>
+          </div>
+
+          <div class="toggle-switch-row">
+            <label for="toggle-compare">Compare All Routes Overlaid</label>
+            <input type="checkbox" id="toggle-compare">
+          </div>
+
+          <div class="weight-control">
+            <label for="speed-slider">Vehicle Speed: <strong id="speed-val">100 px/s</strong></label>
+            <input type="range" id="speed-slider" min="30" max="350" value="100" class="form-input">
+          </div>
+        </div>
+
+        <!-- Quick Add Node Form -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">
+            <span>➕ Quick Add Facility</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.5rem;">
+            <input type="text" id="new-loc-name" class="form-input" placeholder="Facility Name (e.g. Trauma ICU)">
+            <div style="display:flex; gap:0.5rem;">
+              <select id="new-loc-type" class="form-select" style="flex:1;">
+                <option value="hospital">Hospital / ICU</option>
+                <option value="clinic">Field Clinic</option>
+                <option value="shelter">Evacuation Shelter</option>
+              </select>
+              <input type="number" id="new-loc-weight" class="form-input" min="1" max="10" value="8" style="width:65px;" placeholder="Wt">
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-add-loc-manual">Add to Map</button>
+          </div>
+        </div>
+
+        <!-- Triage Locations & Urgency Weights Editor -->
+        <div class="sidebar-card" style="flex-grow:1;">
+          <div class="sidebar-card-title">
+            <span>📍 Triage Nodes (<span id="nodes-count-disp">0</span>)</span>
+            <small style="color:var(--text-muted); font-size:0.75rem;">Double-click node to cycle weight</small>
+          </div>
+
+          <div class="locations-list" id="locations-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       TAB 2: DP Bitmask Step-Through Mode
+       ========================================== -->
+  <section class="tab-pane" id="tab-dp-stepper">
+    <div style="margin-bottom:1rem;">
+      <h2 style="font-size:1.4rem; font-weight:800; color:#fff;">Dynamic Programming Bitmask Inspector (n ≤ 5)</h2>
+      <p style="color:var(--text-secondary); font-size:0.9rem;">
+        Step through the forward DP transitions state-by-state. Observe the binary bitmasks, remaining unvisited weights, incremental penalty calculations, and parent pointers.
+      </p>
+    </div>
+    
+    <div id="dp-stepper-view">
+      <!-- Rendered by js/dp-stepper.js -->
+    </div>
+  </section>
+
+  <!-- ==========================================
+       TAB 3: Empirical Benchmark Suite
+       ========================================== -->
+  <section class="tab-pane" id="tab-benchmark">
+    <div class="benchmark-layout">
+      
+      <!-- Benchmark Bar Controls -->
+      <div class="benchmark-config-bar">
+        <div style="display:flex; align-items:center; gap:1rem;">
+          <div>
+            <label for="bench-trials-select" style="font-size:0.85rem; color:var(--text-secondary); margin-right:0.5rem;">Averaging Trials (k):</label>
+            <select id="bench-trials-select" class="form-select">
+              <option value="3" selected>k = 3 Random Runs</option>
+              <option value="5">k = 5 Random Runs</option>
+              <option value="10">k = 10 Random Runs</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="btn-run-benchmark">▶️ Run Benchmark Suite</button>
+          <button class="btn btn-danger btn-sm" id="btn-cancel-benchmark" disabled>⏹️ Cancel</button>
+        </div>
+
+        <button class="btn btn-secondary" id="btn-export-csv">📥 Export Results as CSV</button>
+
+        <div class="benchmark-progress-box">
+          <div class="progress-track">
+            <div class="progress-fill" id="benchmark-progress-bar"></div>
+          </div>
+          <div class="progress-status" id="benchmark-status-text">Ready to run empirical benchmark across n = 4 to 500.</div>
+        </div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="benchmark-charts-grid">
+        <!-- 1. Runtime vs N -->
+        <div class="chart-card full-width">
+          <div class="chart-card-header">
+            <h3>📈 Runtime Scaling Comparison (Logarithmic Scale)</h3>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-runtime"></canvas>
+          </div>
+        </div>
+
+        <!-- 2. Greedy Optimality Gap -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h3>⚠️ Greedy Optimality Gap % vs Optimal Solution</h3>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-gap"></canvas>
+          </div>
+        </div>
+
+        <!-- 3. B&B Pruning Efficiency -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h3>🌲 Branch & Bound Pruning: Nodes Explored vs Naive Search</h3>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-pruning"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabular Data Results -->
+      <div class="benchmark-table-wrapper" id="benchmark-table-container">
+        <!-- Filled by js/benchmark.js -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       TAB 4: Theory & Mathematical Complexity
+       ========================================== -->
+  <section class="tab-pane" id="tab-theory">
+    <div class="theory-container">
+      
+      <div class="theory-card">
+        <h2>📐 Problem Definition: Minimum Weighted Latency Problem (MWLP)</h2>
+        <p>
+          In emergency triage and disaster relief logistics, standard Traveling Salesperson Problem (TSP) models fail because they only minimize total travel distance, ignoring when each victim or hospital receives aid.
+        </p>
+        <p>
+          The <strong>Minimum Total Weighted Latency Problem</strong> (also known as the <em>Traveling Repairman Problem with Weights</em> or <em>Cumulative Capacitated VRP</em>) models a relief vehicle departing from a depot $(x_0, y_0)$ at time $t = 0$. It must visit $n$ target facilities $\{1, 2, \dots, n\}$, each assigned an urgency weight $w_i \in [1, 10]$.
+        </p>
+        
+        <div class="math-block">
+          $$\text{Objective:} \quad \min_{\pi \in S_n} \sum_{i=1}^n w_{\pi(i)} \cdot A(\pi(i))$$
+          $$\text{where } A(\pi(i)) = \sum_{k=1}^i \text{travel\_time}(\pi(k-1), \pi(k)) \quad \text{with } \pi(0) = \text{depot}$$
+        </div>
+
+        <h3>Why MWLP Fundamentally Differs from TSP</h3>
+        <ul style="color:var(--text-secondary); margin-left:1.5rem; line-height:1.8;">
+          <li><strong>Non-Local Edge Costs:</strong> In TSP, traversing an edge $(u, v)$ adds a fixed distance $d(u, v)$ to the tour cost regardless of when it is traversed. In MWLP, traversing $(u, v)$ at step $k$ delays not only node $v$, but <em>every subsequent unvisited node</em> in the sequence!</li>
+          <li><strong>Prefix Sensitivity:</strong> Reversing a TSP tour produces an identical total cost. In MWLP, reversing a tour drastically changes the objective function. Visiting high-urgency nodes early is heavily rewarded.</li>
+          <li><strong>NP-Hardness:</strong> MWLP is strongly NP-hard even on Euclidean metrics and trees.</li>
+        </ul>
+      </div>
+
+      <div class="theory-card">
+        <h2>⚡ Dynamic Programming with Bitmask: Recurrence & Formulation</h2>
+        <p>
+          To eliminate the need to track continuous elapsed time in the state space, we use the <strong>incremental remaining penalty formulation</strong>.
+        </p>
+        <p>
+          When the vehicle travels from the currently visited node $u$ to a new unvisited node $v$, the transit time $\Delta t = \text{travel\_time}(u, v)$ delays node $v$ and all remaining unvisited nodes. The total weight of all unvisited nodes (including $v$) is $W_{\text{rem}}$. Hence, the immediate contribution to the total objective is:
+        </p>
+
+        <div class="math-block">
+          $$\Delta \text{Cost}(u \to v) = \text{travel\_time}(u, v) \times \sum_{k \notin S} w_k$$
+        </div>
+
+        <p>Let $S \subseteq \{1, \dots, n\}$ be the subset of visited nodes represented as an integer bitmask $\text{mask} \in [0, 2^n - 1]$, and let $u \in S$ be the last visited node.</p>
+
+        <div class="math-block">
+          $$DP[\text{mask} \cup \{v\}][v] = \min_{u \in S} \Big( DP[\text{mask}][u] + \text{travel\_time}(u, v) \times W_{\text{rem}}(\text{mask}) \Big)$$
+          $$\text{Base Case: } DP[1 \ll v][v] = \text{travel\_time}(\text{depot}, v) \times \sum_{i=1}^n w_i \quad \forall v \in \{1, \dots, n\}$$
+          $$\text{Optimal Value: } \min_{j \in \{1, \dots, n\}} DP[(2^n - 1)][j]$$
+        </div>
+
+        <h3>Path Reconstruction</h3>
+        <p>
+          We maintain a predecessor matrix $\text{parent}[\text{mask}][\text{last}] = u^*$. Once the full mask $2^n - 1$ is solved, the optimal path is recovered in $O(n)$ by backtracking through parent pointers.
+        </p>
+      </div>
+
+      <div class="theory-card">
+        <h2>🔍 Pseudocode Comparison</h2>
+
+        <h3>1. Bitmask Dynamic Programming</h3>
+        <pre class="code-block"><code>function SolveDP(depot, locations, speed):
+    n = locations.length
+    numStates = 1 &lt;&lt; n
+    W_total = sum(locations[i].weight)
+    
+    // Initialize DP table to infinity
+    dp = Array(numStates, n).fill(Infinity)
+    parent = Array(numStates, n).fill(-1)
+
+    // Base cases from depot
+    for v from 0 to n-1:
+        dp[1 &lt;&lt; v][v] = travel_time(depot, locations[v]) * W_total
+
+    // Iterate through bitmasks
+    for mask from 1 to numStates - 1:
+        W_rem = W_total - weight_of(mask)
+        if W_rem &lt;= 0: continue
+        
+        for u in mask:
+            if dp[mask][u] == Infinity: continue
+            for v not in mask:
+                nextMask = mask | (1 &lt;&lt; v)
+                cost = dp[mask][u] + travel_time(locations[u], locations[v]) * W_rem
+                if cost &lt; dp[nextMask][v]:
+                    dp[nextMask][v] = cost
+                    parent[nextMask][v] = u
+
+    return ReconstructPath(dp, parent, numStates - 1)</code></pre>
+
+        <h3>2. Backtracking with Branch & Bound</h3>
+        <pre class="code-block"><code>function Backtrack(depth, lastNode, currentCost, remWeight):
+    nodesExplored++
+    if depth == n:
+        if currentCost &lt; bestCost:
+            bestCost = currentCost
+            bestOrder = currentPath.clone()
+        return
+
+    // Admissible lower bounding for pruning
+    lowerBound = currentCost + min_exit_distance(lastNode) * remWeight
+    if lowerBound &gt;= bestCost:
+        return // PRUNED
+
+    for each unvisited node v:
+        visited[v] = true
+        t = travel_time(lastNode, v)
+        Backtrack(depth + 1, v, currentCost + t * remWeight, remWeight - v.weight)
+        visited[v] = false</code></pre>
+
+        <h3>3. Greedy Priority Ratio Heuristic</h3>
+        <pre class="code-block"><code>function SolveGreedy(depot, locations):
+    currentPos = depot
+    unvisited = {0, 1, ..., n-1}
+    order = []
+    
+    while unvisited is not empty:
+        // Maximize urgency-to-travel-cost ratio
+        best_v = argmax_{v in unvisited} (weight[v] / travel_time(currentPos, v))
+        order.append(best_v)
+        unvisited.remove(best_v)
+        currentPos = locations[best_v]
+        
+    return order</code></pre>
+      </div>
+
+      <div class="theory-card">
+        <h2>📊 Asymptotic Time and Space Complexity Analysis</h2>
+
+        <table class="complexity-table">
+          <thead>
+            <tr>
+              <th>Algorithm</th>
+              <th>Time Complexity</th>
+              <th>Space Complexity</th>
+              <th>Optimality</th>
+              <th>Practical $n$ Limit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="algo-badge badge-dp">Bitmask DP</span></td>
+              <td>$\Theta(n^2 \cdot 2^n)$</td>
+              <td>$\Theta(n \cdot 2^n)$</td>
+              <td><strong>Exact Global Minimum</strong></td>
+              <td>$n \le 18$ (Instant in JS)</td>
+            </tr>
+            <tr>
+              <td><span class="algo-badge badge-bb">Backtracking (B&B)</span></td>
+              <td>$O(n!)$ worst, $O(c^n)$ avg</td>
+              <td>$O(n)$ call stack</td>
+              <td><strong>Exact Global Minimum</strong></td>
+              <td>$n \le 12$</td>
+            </tr>
+            <tr>
+              <td><span class="algo-badge" style="background:#ef444422; color:#ef4444; border:1px solid #ef4444;">Naive BT (No Pruning)</span></td>
+              <td>$\Theta(n!)$</td>
+              <td>$O(n)$</td>
+              <td><strong>Exact Global Minimum</strong></td>
+              <td>$n \le 9$ ($9! = 362,880$)</td>
+            </tr>
+            <tr>
+              <td><span class="algo-badge badge-greedy">Greedy Heuristic</span></td>
+              <td>$O(n^2)$</td>
+              <td>$O(n)$</td>
+              <td>Suboptimal (Approximation)</td>
+              <td>$n \le 10,000+$</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Why Bitmask DP is the Superior Choice for Tactical Dispatch ($n \le 18$)</h3>
+        <p>
+          For realistic single-vehicle dispatch scenarios (where one ambulance or relief helicopter services 5 to 18 critical triage stations per sortie):
+        </p>
+        <ul style="color:var(--text-secondary); margin-left:1.5rem; line-height:1.8;">
+          <li><strong>No Exponential Surprises:</strong> Unlike Branch and Bound, whose runtime can degrade into worst-case $O(n!)$ on symmetric or uniform distributions, Dynamic Programming runs in deterministic $\Theta(n^2 2^n)$ time.</li>
+          <li><strong>Zero Approximation Risk:</strong> As proven by our "Greedy Trap" preset, greedy heuristics can suffer >20% latency penalties when lured by nearby mild casualties, leading to avoidable mortality in critical patients. DP guarantees mathematically minimal delay.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       TAB 5: Practical Disaster Response & Triage
+       ========================================== -->
+  <section class="tab-pane" id="tab-practical">
+    <div class="practical-container">
+      
+      <div class="practical-card">
+        <h2>🚑 Real-World Emergency & Humanitarian Applications</h2>
+        <p>
+          The "Golden Hour" in emergency medicine refers to the first 60 minutes following severe traumatic injury or catastrophic event. Prompt intervention during this window determines survival rates.
+        </p>
+
+        <div class="practical-grid">
+          
+          <div class="practical-item">
+            <div class="practical-item-icon">🏥</div>
+            <h4>Mass Casualty Incident (MCI) Ambulance Dispatch</h4>
+            <p>
+              In multi-vehicle pileups, building collapses, or industrial explosions, paramedics assign START (Simple Triage and Rapid Treatment) priority tags: <em>Immediate (Red, w=10)</em>, <em>Delayed (Yellow, w=5)</em>, and <em>Minor (Green, w=2)</em>. GoldenHour Router ensures life-support transport reaches Red-tag victims first while minimizing total system waiting time.
+            </p>
+          </div>
+
+          <div class="practical-item">
+            <div class="practical-item-icon">🚁</div>
+            <h4>Autonomous Medical Drone Delivery</h4>
+            <p>
+              Unmanned Aerial Vehicles (UAVs) carrying anti-venom, O-negative blood units, automated external defibrillators (AEDs), and epinephrine to inaccessible mountain clinics and flood-isolated rural islands.
+            </p>
+          </div>
+
+          <div class="practical-item">
+            <div class="practical-item-icon">⚡</div>
+            <h4>Post-Disaster Critical Infrastructure Restoration</h4>
+            <p>
+              Following cyclones, hurricanes, or earthquakes, power grid technicians must prioritize sub-stations supplying trauma ICUs ($w=10$) and water filtration plants ($w=8$) before restoring residential circuits ($w=2$).
+            </p>
+          </div>
+
+          <div class="practical-item">
+            <div class="practical-item-icon">📦</div>
+            <h4>Humanitarian Cold-Chain Supply Logistics</h4>
+            <p>
+              UN and Red Cross mobile vaccination teams transporting temperature-sensitive vaccines and emergency rations through disaster corridors where delivery degradation accelerates over time.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="practical-card">
+        <h2>🩺 Standard Triage Urgency Weight Scale</h2>
+        <table class="complexity-table">
+          <thead>
+            <tr>
+              <th>Urgency Weight</th>
+              <th>START Triage Tag</th>
+              <th>Clinical Condition</th>
+              <th>Max Tolerable Response Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:#ef4444;">10 (Critical)</strong></td>
+              <td><span class="badge badge-danger">RED (Immediate)</span></td>
+              <td>Arterial hemorrhage, respiratory arrest, tension pneumothorax, major trauma ICU</td>
+              <td>&lt; 15 Minutes (Golden Window)</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#f97316;">7 - 9 (Severe)</strong></td>
+              <td><span class="badge badge-warning">RED / ORANGE</span></td>
+              <td>Open fractures, severe burns, acute neurological deficits</td>
+              <td>&lt; 30 Minutes</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#eab308;">4 - 6 (Moderate)</strong></td>
+              <td><span class="badge badge-warning">YELLOW (Delayed)</span></td>
+              <td>Closed fractures, controlled lacerations, secondary shelter triage</td>
+              <td>&lt; 60 Minutes</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#10b981;">1 - 3 (Minor)</strong></td>
+              <td><span class="badge badge-success">GREEN (Minor)</span></td>
+              <td>Walking wounded, superficial abrasions, supply restock depots</td>
+              <td>&lt; 180 Minutes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Core Scripts -->
+  <script src="js/algorithms.js"></script>
+  <script src="js/presets.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/dp-stepper.js"></script>
+  <script src="js/benchmark.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
