@@ -157,14 +157,18 @@ export function TelemetryPanel({
           </span>
 
           {activeSol?.arrivalTimes?.map((step, idx) => {
-            const loc = step.location;
+            const loc = step.location || (locations && locations[step.locationIndex]) || {};
+            const weight = loc?.weight ?? 1;
+            const name = loc?.name || `Facility #${idx + 1}`;
+            const arrTime = typeof step.arrivalTime === 'number' ? step.arrivalTime.toFixed(1) : '0.0';
+            const penVal = typeof step.stepWeightedDelay === 'number' ? step.stepWeightedDelay.toFixed(1) : '0.0';
             return (
               <React.Fragment key={idx}>
                 <span className="seq-arrow">➔</span>
-                <span className="seq-chip" style={{ borderLeft: `4px solid ${getNodeColor(loc.weight)}` }}>
-                  <strong>#{idx + 1} {loc.name}</strong>
+                <span className="seq-chip" style={{ borderLeft: `4px solid ${getNodeColor(weight)}` }}>
+                  <strong>#{idx + 1} {name}</strong>
                   <small>
-                    t = {step.arrivalTime.toFixed(1)}s (W{loc.weight}, pen: {step.stepWeightedDelay.toFixed(1)})
+                    t = {arrTime}s (W{weight}, pen: {penVal})
                   </small>
                 </span>
               </React.Fragment>

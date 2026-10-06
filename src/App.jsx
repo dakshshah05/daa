@@ -8,6 +8,7 @@ import { DPStepThrough } from './components/DPStepThrough';
 import { BenchmarkSuite } from './components/BenchmarkSuite';
 import { WhyDPSection } from './components/WhyDPSection';
 import { TeacherWalkthroughModal } from './components/TeacherWalkthroughModal';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { PRESET_SCENARIOS } from './algorithms/presets';
 import { RouteSolvers } from './algorithms/solvers';
 import { sounds } from './utils/soundEffects';
@@ -168,138 +169,140 @@ export function App() {
       />
 
       <main className="main-content">
-        {activeTab === 'canvas' && (
-          <div className="router-layout-grid">
-            
-            {/* Left Stage */}
-            <section style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem', minWidth: 0 }}>
+        <ErrorBoundary onReset={() => setActiveTab('canvas')}>
+          {activeTab === 'canvas' && (
+            <div className="router-layout-grid">
               
-              {/* Presets & Random Bento Bar */}
-              <div className="stage-card" style={{ padding: '0.65rem 1rem' }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.6rem' }}>
-                  
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: '260px' }}>
-                    <label htmlFor="preset-select-dropdown" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>Preset:</label>
-                    <select
-                      id="preset-select-dropdown"
-                      className="form-select"
-                      style={{ flex: 1, padding: '0.35rem 0.65rem', fontSize: '0.78rem' }}
-                      value={currentPresetId}
-                      onChange={(e) => loadPresetById(e.target.value)}
-                    >
-                      {PRESET_SCENARIOS.map((p) => (
-                        <option key={p.id} value={p.id}>{p.name}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <label htmlFor="random-n-field" style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>n =</label>
-                      <input
-                        type="number"
-                        id="random-n-field"
-                        className="form-input"
-                        style={{ width: '48px', padding: '0.35rem 0.2rem', textAlign: 'center', fontSize: '0.78rem' }}
-                        min="3"
-                        max="18"
-                        value={randomN}
-                        onChange={(e) => setRandomN(Number(e.target.value))}
-                      />
+              {/* Left Stage */}
+              <section style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem', minWidth: 0 }}>
+                
+                {/* Presets & Random Bento Bar */}
+                <div className="stage-card" style={{ padding: '0.65rem 1rem' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.6rem' }}>
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: '260px' }}>
+                      <label htmlFor="preset-select-dropdown" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>Preset:</label>
+                      <select
+                        id="preset-select-dropdown"
+                        className="form-select"
+                        style={{ flex: 1, padding: '0.35rem 0.65rem', fontSize: '0.78rem' }}
+                        value={currentPresetId}
+                        onChange={(e) => loadPresetById(e.target.value)}
+                      >
+                        {PRESET_SCENARIOS.map((p) => (
+                          <option key={p.id} value={p.id}>{p.name}</option>
+                        ))}
+                      </select>
                     </div>
-                    <button className="btn btn-secondary btn-sm" onClick={handleGenerateRandom}>
-                      <Dices size={13} /> Random
-                    </button>
-                    <button className="btn btn-outline btn-sm" onClick={handleClear}>
-                      <Trash2 size={13} /> Clear
-                    </button>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <label htmlFor="random-n-field" style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>n =</label>
+                        <input
+                          type="number"
+                          id="random-n-field"
+                          className="form-input"
+                          style={{ width: '48px', padding: '0.35rem 0.2rem', textAlign: 'center', fontSize: '0.78rem' }}
+                          min="3"
+                          max="18"
+                          value={randomN}
+                          onChange={(e) => setRandomN(Number(e.target.value))}
+                        />
+                      </div>
+                      <button className="btn btn-secondary btn-sm" onClick={handleGenerateRandom}>
+                        <Dices size={13} /> Random
+                      </button>
+                      <button className="btn btn-outline btn-sm" onClick={handleClear}>
+                        <Trash2 size={13} /> Clear
+                      </button>
+                    </div>
+
                   </div>
 
+                  {currentPreset && (
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+                      {currentPreset.description}
+                    </div>
+                  )}
                 </div>
 
-                {currentPreset && (
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                    {currentPreset.description}
-                  </div>
-                )}
-              </div>
+                {/* Interactive Canvas */}
+                <RouterCanvas
+                  depot={depot}
+                  setDepot={setDepot}
+                  locations={locations}
+                  setLocations={setLocations}
+                  selectedNodeIndex={selectedNodeIndex}
+                  setSelectedNodeIndex={setSelectedNodeIndex}
+                  activeRoutes={activeRoutes}
+                  currentSolver={currentSolver}
+                  compareMode={compareMode}
+                  vehicleAnim={vehicleAnim}
+                  setVehicleAnim={setVehicleAnim}
+                  speed={speed}
+                  onStateModified={handleStateModified}
+                />
 
-              {/* Interactive Canvas */}
-              <RouterCanvas
-                depot={depot}
-                setDepot={setDepot}
+                {/* Telemetry & Timeline */}
+                <TelemetryPanel
+                  activeSol={activeSol}
+                  vehicleAnim={vehicleAnim}
+                  setVehicleAnim={setVehicleAnim}
+                  locations={locations}
+                  depot={depot}
+                  speed={speed}
+                />
+
+                {/* Solvers Comparison Results Table */}
+                <ResultsComparison
+                  allSol={activeRoutes}
+                  currentSolver={currentSolver}
+                  onOpenTeacherGuide={() => setActiveTab('why-dp')}
+                />
+
+              </section>
+
+              {/* Right Sidebar Editor */}
+              <SidebarEditor
                 locations={locations}
                 setLocations={setLocations}
                 selectedNodeIndex={selectedNodeIndex}
                 setSelectedNodeIndex={setSelectedNodeIndex}
-                activeRoutes={activeRoutes}
                 currentSolver={currentSolver}
+                setCurrentSolver={setCurrentSolver}
+                enablePruning={enablePruning}
+                setEnablePruning={setEnablePruning}
                 compareMode={compareMode}
-                vehicleAnim={vehicleAnim}
-                setVehicleAnim={setVehicleAnim}
+                setCompareMode={setCompareMode}
                 speed={speed}
+                setSpeed={setSpeed}
                 onStateModified={handleStateModified}
-              />
-
-              {/* Telemetry & Timeline */}
-              <TelemetryPanel
-                activeSol={activeSol}
-                vehicleAnim={vehicleAnim}
-                setVehicleAnim={setVehicleAnim}
-                locations={locations}
                 depot={depot}
-                speed={speed}
               />
 
-              {/* Solvers Comparison Results Table */}
-              <ResultsComparison
-                allSol={activeRoutes}
-                currentSolver={currentSolver}
-                onOpenTeacherGuide={() => setActiveTab('why-dp')}
-              />
+            </div>
+          )}
 
-            </section>
-
-            {/* Right Sidebar Editor */}
-            <SidebarEditor
-              locations={locations}
-              setLocations={setLocations}
-              selectedNodeIndex={selectedNodeIndex}
-              setSelectedNodeIndex={setSelectedNodeIndex}
-              currentSolver={currentSolver}
-              setCurrentSolver={setCurrentSolver}
-              enablePruning={enablePruning}
-              setEnablePruning={setEnablePruning}
-              compareMode={compareMode}
-              setCompareMode={setCompareMode}
-              speed={speed}
-              setSpeed={setSpeed}
-              onStateModified={handleStateModified}
+          {activeTab === 'dp-stepper' && (
+            <DPStepThrough
               depot={depot}
+              locations={locations}
+              speed={speed}
+              onLoadPreset={loadPresetById}
             />
+          )}
 
-          </div>
-        )}
+          {activeTab === 'benchmark' && (
+            <BenchmarkSuite speed={speed} />
+          )}
 
-        {activeTab === 'dp-stepper' && (
-          <DPStepThrough
-            depot={depot}
-            locations={locations}
-            speed={speed}
-            onLoadPreset={loadPresetById}
-          />
-        )}
-
-        {activeTab === 'benchmark' && (
-          <BenchmarkSuite speed={speed} />
-        )}
-
-        {activeTab === 'why-dp' && (
-          <WhyDPSection
-            onLoadPreset={loadPresetById}
-            setActiveTab={setActiveTab}
-          />
-        )}
+          {activeTab === 'why-dp' && (
+            <WhyDPSection
+              onLoadPreset={loadPresetById}
+              setActiveTab={setActiveTab}
+            />
+          )}
+        </ErrorBoundary>
       </main>
 
       {/* Presentation Walkthrough Modal */}

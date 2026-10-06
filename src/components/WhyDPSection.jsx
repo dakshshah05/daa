@@ -2,23 +2,115 @@ import React, { useState } from 'react';
 import { 
   CheckCircle2, 
   XCircle, 
-  AlertTriangle, 
   Cpu, 
   Flame, 
   Zap, 
   Scale, 
   ShieldCheck, 
   Clock, 
-  Sparkles,
-  BookOpen,
-  Code2,
-  Calculator,
-  ChevronDown,
-  ChevronUp
+  Sparkles, 
+  Code2, 
+  Calculator 
 } from 'lucide-react';
 
 export function WhyDPSection({ onLoadPreset, setActiveTab }) {
   const [activeCodeTab, setActiveCodeTab] = useState('dp'); // 'dp' | 'bb' | 'greedy'
+
+  const dpPseudocode = `// ================================================================
+// ALGORITHM 1: Bitmask Dynamic Programming (Exact Optimal Solver)
+// ================================================================
+
+function SolveDynamicProgramming(depot, locations, speed):
+  n = locations.length
+  numStates = 1 << n // 2^n possible visited subsets
+  totalWeight = sum of all locations[i].weight
+  
+  // Step 1: Initialize dp[mask][last] and parent[mask][last]
+  dp = Array(numStates, n).fill(Infinity)
+  parent = Array(numStates, n).fill(-1)
+  
+  // Step 2: Base Cases (Travel from Depot to first location v)
+  for v = 0 to n - 1:
+    mask = 1 << v
+    dp[mask][v] = travel_time(depot, locations[v]) * totalWeight
+    parent[mask][v] = -1 // Started from depot
+  
+  // Step 3: Populate Subproblems by Mask Size
+  for mask = 1 to numStates - 1:
+    remWeight = totalWeight - weight_of(mask)
+    if remWeight <= 0: continue
+    
+    for u = 0 to n - 1 (where u is in mask):
+      if dp[mask][u] == Infinity: continue
+      
+      for v = 0 to n - 1 (where v is NOT in mask):
+        nextMask = mask | (1 << v)
+        addedPenalty = travel_time(locations[u], locations[v]) * remWeight
+        cost = dp[mask][u] + addedPenalty
+        
+        if cost < dp[nextMask][v]:
+          dp[nextMask][v] = cost
+          parent[nextMask][v] = u
+  
+  // Step 4: Reconstruct Optimal Route from Parent Table
+  bestLastNode = argmin_v (dp[(1 << n) - 1][v])
+  optimalRoute = BacktrackParents(parent, bestLastNode)
+  return optimalRoute, dp[(1 << n) - 1][bestLastNode]`;
+
+  const bbPseudocode = `// ================================================================
+// ALGORITHM 2: Backtracking with Branch & Bound Pruning
+// ================================================================
+
+function SolveBranchAndBound(depot, locations, speed):
+  bestCost = Infinity
+  bestRoute = []
+  
+  function Search(depth, lastNode, currentCost, remWeight):
+    if depth == n:
+      if currentCost < bestCost:
+        bestCost = currentCost
+        bestRoute = currentPath.clone()
+      return
+    
+    // Branch and Bound Lower Bound Pruning
+    lowerBound = currentCost + min_exit_time(lastNode) * remWeight
+    if lowerBound >= bestCost:
+      return // PRUNE SUBTREE
+    
+    for each unvisited location v:
+      visited[v] = true
+      deltaCost = travel_time(lastNode, locations[v]) * remWeight
+      Search(depth + 1, v, currentCost + deltaCost, remWeight - locations[v].weight)
+      visited[v] = false
+  
+  Search(depth=0, lastNode=Depot, currentCost=0, remWeight=totalWeight)
+  return bestRoute, bestCost`;
+
+  const greedyPseudocode = `// ================================================================
+// ALGORITHM 3: Greedy Priority Heuristic (Shortsighted w/t Ratio)
+// ================================================================
+
+function SolveGreedy(depot, locations, speed):
+  currentPos = depot
+  unvisited = Set(0, 1, ..., n - 1)
+  order = []
+  
+  while unvisited is not empty:
+    bestNode = -1
+    bestRatio = -Infinity
+    
+    for each candidate v in unvisited:
+      t = travel_time(currentPos, locations[v], speed)
+      ratio = locations[v].weight / max(t, 0.0001)
+      if ratio > bestRatio:
+        bestRatio = ratio
+        bestNode = v
+    
+    order.append(bestNode)
+    unvisited.remove(bestNode)
+    currentPos = locations[bestNode]
+  
+  return order, EvaluateRouteCost(order)`;
 
   return (
     <div style={{ maxWidth: '1180px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -60,11 +152,11 @@ export function WhyDPSection({ onLoadPreset, setActiveTab }) {
           <ul style={{ color: 'var(--text-secondary)', fontSize: '0.86rem', lineHeight: 1.7, marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
               <CheckCircle2 size={16} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span><strong>Guaranteed Global Minimum:</strong> Always minimizes total weighted patient delay (∑ wᵢ · Aᵢ).</span>
+              <span><strong>Guaranteed Global Minimum:</strong> Always minimizes total weighted patient delay.</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
               <CheckCircle2 size={16} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span><strong>Deterministic Performance:</strong> Solves exactly 2ⁿ × n subproblems. No unpredictable runtime spikes.</span>
+              <span><strong>Deterministic Performance:</strong> Solves exactly 2ⁿ × n subproblems. No runtime spikes.</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
               <CheckCircle2 size={16} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
@@ -74,7 +166,7 @@ export function WhyDPSection({ onLoadPreset, setActiveTab }) {
 
           <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
             <div style={{ background: '#070b14', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '0.65rem 0.85rem', borderRadius: '8px', fontSize: '0.78rem', color: '#34d399' }}>
-              ✅ <strong>Verdict:</strong> Ideal for single-vehicle dispatch with n ≤ 18 triage stations per sortie.
+              ✅ <strong>Verdict:</strong> Ideal for single-vehicle dispatch with n ≤ 18 facilities per sortie.
             </div>
           </div>
         </div>
@@ -116,8 +208,8 @@ export function WhyDPSection({ onLoadPreset, setActiveTab }) {
               className="btn btn-sm btn-outline"
               style={{ width: '100%', borderColor: '#f59e0b', color: '#fbbf24' }}
               onClick={() => {
-                onLoadPreset('greedy_trap');
-                setActiveTab('canvas');
+                if (onLoadPreset) onLoadPreset('greedy_trap');
+                if (setActiveTab) setActiveTab('canvas');
               }}
             >
               🚨 Test the Greedy Trap Live on Canvas
@@ -182,9 +274,9 @@ export function WhyDPSection({ onLoadPreset, setActiveTab }) {
             </h4>
             <ol style={{ color: 'var(--text-secondary)', fontSize: '0.86rem', lineHeight: 1.8, marginLeft: '1.2rem' }}>
               <li>
-                <strong>State Count:</strong> A state is defined by a pair <code>(S, u)</code> where <code>S ⊆ {'{1..n}'}</code> is the subset of visited locations (represented as an integer bitmask from <code>0</code> to <code>2ⁿ - 1</code>), and <code>u ∈ S</code> is the last visited location.
+                <strong>State Count:</strong> A state is defined by a pair <code>(S, u)</code> where <code>S</code> is the subset of visited locations (an integer bitmask from <code>0</code> to <code>2ⁿ - 1</code>), and <code>u</code> is the last visited location.
                 <div style={{ fontFamily: 'JetBrains Mono', color: '#38bdf8', marginTop: '0.2rem' }}>
-                  Total States = ∑ [k=1 to n] (n choose k) × k = n · 2ⁿ⁻¹ = O(n · 2ⁿ)
+                  Total States = ∑ (n choose k) × k = n · 2ⁿ⁻¹ = O(n · 2ⁿ)
                 </div>
               </li>
               <li>
@@ -193,7 +285,7 @@ export function WhyDPSection({ onLoadPreset, setActiveTab }) {
               <li>
                 <strong>Total Operations Count:</strong>
                 <div style={{ fontFamily: 'JetBrains Mono', color: '#34d399', background: '#070a13', padding: '0.5rem', borderRadius: '6px', margin: '0.4rem 0' }}>
-                  Total Transitions = ∑ [k=1 to n] (n choose k) × k × (n - k) = n(n - 1) · 2ⁿ⁻² = Θ(n² · 2ⁿ)
+                  Total Transitions = ∑ (n choose k) × k × (n - k) = n(n - 1) · 2ⁿ⁻² = Θ(n² · 2ⁿ)
                 </div>
               </li>
               <li>
@@ -275,119 +367,14 @@ export function WhyDPSection({ onLoadPreset, setActiveTab }) {
           </button>
         </div>
 
-        {/* DP Pseudocode */}
-        {activeCodeTab === 'dp' && (
-          <div style={{ marginTop: '1rem' }}>
-            <div style={{ background: '#070a13', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '1.25rem', fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: '#e2e8f0', lineHeight: 1.7, overflowX: 'auto' }}>
-              <span style={{ color: '#10b981', fontWeight: 700 }}>// ================================================================</span><br />
-              <span style={{ color: '#10b981', fontWeight: 700 }}>// ALGORITHM 1: Bitmask Dynamic Programming (Exact Optimal Solver)</span><br />
-              <span style={{ color: '#10b981', fontWeight: 700 }}>// ================================================================</span><br /><br />
-              <span style={{ color: '#38bdf8' }}>function</span> <span style={{ color: '#fbbf24' }}>SolveDynamicProgramming</span>(depot, locations, speed):<br />
-              &nbsp;&nbsp;n = locations.length<br />
-              &nbsp;&nbsp;numStates = 1 &lt;&lt; n <span style={{ color: '#64748b' }}>// 2ⁿ possible visited subsets</span><br />
-              &nbsp;&nbsp;totalWeight = sum of all locations[i].weight<br />
-              &nbsp;&nbsp;<br />
-              &nbsp;&nbsp;<span style={{ color: '#64748b' }}>// Step 1: Initialize dp[mask][last] and parent[mask][last]</span><br />
-              &nbsp;&nbsp;dp = Array(numStates, n).fill(Infinity)<br />
-              &nbsp;&nbsp;parent = Array(numStates, n).fill(-1)<br />
-              &nbsp;&nbsp;<br />
-              &nbsp;&nbsp;<span style={{ color: '#64748b' }}>// Step 2: Base Cases (Travel from Depot to first location v)</span><br />
-              &nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>for</span> v = 0 <span style={{ color: '#38bdf8' }}>to</span> n - 1:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;mask = 1 &lt;&lt; v<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;dp[mask][v] = travel_time(depot, locations[v]) * totalWeight<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;parent[mask][v] = -1 <span style={{ color: '#64748b' }}>// Started from depot</span><br />
-              &nbsp;&nbsp;<br />
-              &nbsp;&nbsp;<span style={{ color: '#64748b' }}>// Step 3: Populate Subproblems by Mask Size</span><br />
-              &nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>for</span> mask = 1 <span style={{ color: '#38bdf8' }}>to</span> numStates - 1:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;remWeight = totalWeight - weight_of(mask)<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>if</span> remWeight &lt;= 0: <span style={{ color: '#38bdf8' }}>continue</span><br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>for</span> u = 0 <span style={{ color: '#38bdf8' }}>to</span> n - 1 (<span style={{ color: '#38bdf8' }}>where</span> u is in mask):<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>if</span> dp[mask][u] == Infinity: <span style={{ color: '#38bdf8' }}>continue</span><br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>for</span> v = 0 <span style={{ color: '#38bdf8' }}>to</span> n - 1 (<span style={{ color: '#38bdf8' }}>where</span> v is NOT in mask):<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nextMask = mask | (1 &lt;&lt; v)<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addedPenalty = travel_time(locations[u], locations[v]) * remWeight<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cost = dp[mask][u] + addedPenalty<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>if</span> cost &lt; dp[nextMask][v]:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp[nextMask][v] = cost<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parent[nextMask][v] = u<br />
-              &nbsp;&nbsp;<br />
-              &nbsp;&nbsp;<span style={{ color: '#64748b' }}>// Step 4: Reconstruct Optimal Route from Parent Table</span><br />
-              &nbsp;&nbsp;bestLastNode = argmin_{v} (dp[(1 &lt;&lt; n) - 1][v])<br />
-              &nbsp;&nbsp;optimalRoute = BacktrackParents(parent, bestLastNode)<br />
-              &nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>return</span> optimalRoute, dp[(1 &lt;&lt; n) - 1][bestLastNode]
-            </div>
-          </div>
-        )}
-
-        {/* B&B Pseudocode */}
-        {activeCodeTab === 'bb' && (
-          <div style={{ marginTop: '1rem' }}>
-            <div style={{ background: '#070a13', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '1.25rem', fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: '#e2e8f0', lineHeight: 1.7, overflowX: 'auto' }}>
-              <span style={{ color: '#06b6d4', fontWeight: 700 }}>// ================================================================</span><br />
-              <span style={{ color: '#06b6d4', fontWeight: 700 }}>// ALGORITHM 2: Backtracking with Branch & Bound Pruning</span><br />
-              <span style={{ color: '#06b6d4', fontWeight: 700 }}>// ================================================================</span><br /><br />
-              <span style={{ color: '#38bdf8' }}>function</span> <span style={{ color: '#fbbf24' }}>SolveBranchAndBound</span>(depot, locations, speed):<br />
-              &nbsp;&nbsp;bestCost = Infinity<br />
-              &nbsp;&nbsp;bestRoute = []<br />
-              &nbsp;&nbsp;<br />
-              &nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>function</span> <span style={{ color: '#fbbf24' }}>Search</span>(depth, lastNode, currentCost, remWeight):<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>if</span> depth == n:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>if</span> currentCost &lt; bestCost:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestCost = currentCost<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestRoute = currentPath.clone()<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>return</span><br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#64748b' }}>// Branch and Bound Lower Bound Pruning</span><br />
-              &nbsp;&nbsp;&nbsp;&nbsp;lowerBound = currentCost + min_exit_time(lastNode) * remWeight<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>if</span> lowerBound &gt;= bestCost:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>return</span> <span style={{ color: '#ef4444' }}>// PRUNE SUBTREE</span><br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>for each</span> unvisited location v:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[v] = true<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deltaCost = travel_time(lastNode, locations[v]) * remWeight<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search(depth + 1, v, currentCost + deltaCost, remWeight - locations[v].weight)<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited[v] = false<br />
-              &nbsp;&nbsp;<br />
-              &nbsp;&nbsp;Search(depth=0, lastNode=Depot, currentCost=0, remWeight=totalWeight)<br />
-              &nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>return</span> bestRoute, bestCost
-            </div>
-          </div>
-        )}
-
-        {/* Greedy Pseudocode */}
-        {activeCodeTab === 'greedy' && (
-          <div style={{ marginTop: '1rem' }}>
-            <div style={{ background: '#070a13', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '1.25rem', fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: '#e2e8f0', lineHeight: 1.7, overflowX: 'auto' }}>
-              <span style={{ color: '#f59e0b', fontWeight: 700 }}>// ================================================================</span><br />
-              <span style={{ color: '#f59e0b', fontWeight: 700 }}>// ALGORITHM 3: Greedy Priority Heuristic (Shortsighted w/t Ratio)</span><br />
-              <span style={{ color: '#f59e0b', fontWeight: 700 }}>// ================================================================</span><br /><br />
-              <span style={{ color: '#38bdf8' }}>function</span> <span style={{ color: '#fbbf24' }}>SolveGreedy</span>(depot, locations, speed):<br />
-              &nbsp;&nbsp;currentPos = depot<br />
-              &nbsp;&nbsp;unvisited = Set(0, 1, ..., n - 1)<br />
-              &nbsp;&nbsp;order = []<br />
-              &nbsp;&nbsp;<br />
-              &nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>while</span> unvisited is not empty:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;bestNode = -1<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;bestRatio = -Infinity<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>for each</span> candidate v in unvisited:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t = travel_time(currentPos, locations[v], speed)<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ratio = locations[v].weight / max(t, 0.0001)<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>if</span> ratio &gt; bestRatio:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestRatio = ratio<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestNode = v<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;order.append(bestNode)<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;unvisited.remove(bestNode)<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;currentPos = locations[bestNode]<br />
-              &nbsp;&nbsp;<br />
-              &nbsp;&nbsp;<span style={{ color: '#38bdf8' }}>return</span> order, EvaluateRouteCost(order)
-            </div>
-          </div>
-        )}
+        {/* Code View */}
+        <div style={{ marginTop: '1rem' }}>
+          <pre style={{ background: '#070a13', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '1.25rem', fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: '#e2e8f0', lineHeight: 1.7, overflowX: 'auto', margin: 0 }}>
+            {activeCodeTab === 'dp' && dpPseudocode}
+            {activeCodeTab === 'bb' && bbPseudocode}
+            {activeCodeTab === 'greedy' && greedyPseudocode}
+          </pre>
+        </div>
       </div>
 
       {/* 5. Head-to-Head Comparison Table */}
