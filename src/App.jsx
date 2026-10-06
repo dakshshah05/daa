@@ -6,16 +6,15 @@ import { SidebarEditor } from './components/SidebarEditor';
 import { ResultsComparison } from './components/ResultsComparison';
 import { DPStepThrough } from './components/DPStepThrough';
 import { BenchmarkSuite } from './components/BenchmarkSuite';
-import { TheorySection } from './components/TheorySection';
-import { PracticalUseSection } from './components/PracticalUseSection';
+import { WhyDPSection } from './components/WhyDPSection';
 import { TeacherWalkthroughModal } from './components/TeacherWalkthroughModal';
 import { PRESET_SCENARIOS } from './algorithms/presets';
 import { RouteSolvers } from './algorithms/solvers';
 import { sounds } from './utils/soundEffects';
-import { Dices, Trash2, Sparkles, GraduationCap } from 'lucide-react';
+import { Dices, Trash2, Sparkles } from 'lucide-react';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState('canvas');
+  const [activeTab, setActiveTab] = useState('canvas'); // 'canvas' | 'dp-stepper' | 'benchmark' | 'why-dp'
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [currentPresetId, setCurrentPresetId] = useState('greedy_trap');
   const [depot, setDepot] = useState({ x: 140, y: 280, name: 'Central Relief Depot' });
@@ -165,7 +164,7 @@ export function App() {
         setActiveTab={setActiveTab}
         audioEnabled={audioEnabled}
         setAudioEnabled={setAudioEnabled}
-        onOpenTeacherGuide={() => setIsTeacherGuideOpen(true)}
+        onOpenTeacherGuide={() => setIsTeacherGuideOpen(false) || setActiveTab('why-dp')}
       />
 
       <main className="main-content">
@@ -256,7 +255,7 @@ export function App() {
               <ResultsComparison
                 allSol={activeRoutes}
                 currentSolver={currentSolver}
-                onOpenTeacherGuide={() => setIsTeacherGuideOpen(true)}
+                onOpenTeacherGuide={() => setActiveTab('why-dp')}
               />
 
             </section>
@@ -295,16 +294,15 @@ export function App() {
           <BenchmarkSuite speed={speed} />
         )}
 
-        {activeTab === 'theory' && (
-          <TheorySection />
-        )}
-
-        {activeTab === 'practical' && (
-          <PracticalUseSection />
+        {activeTab === 'why-dp' && (
+          <WhyDPSection
+            onLoadPreset={loadPresetById}
+            setActiveTab={setActiveTab}
+          />
         )}
       </main>
 
-      {/* Presentation Walkthrough Modal for Teachers */}
+      {/* Presentation Walkthrough Modal */}
       <TeacherWalkthroughModal
         isOpen={isTeacherGuideOpen}
         onClose={() => setIsTeacherGuideOpen(false)}

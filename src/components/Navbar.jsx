@@ -4,8 +4,7 @@ import {
   MapPin, 
   Cpu, 
   BarChart3, 
-  BookOpen, 
-  HeartPulse, 
+  Lightbulb, 
   Volume2, 
   VolumeX, 
   Github,
@@ -19,8 +18,7 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled,
     { id: 'canvas', label: 'Command Canvas', icon: MapPin },
     { id: 'dp-stepper', label: 'DP Bitmask Debugger', icon: Cpu },
     { id: 'benchmark', label: 'Benchmark Suite', icon: BarChart3 },
-    { id: 'theory', label: 'Theory & Proofs', icon: BookOpen },
-    { id: 'practical', label: 'Field Triage', icon: HeartPulse }
+    { id: 'why-dp', label: 'Why DP is Best', icon: Lightbulb }
   ];
 
   const handleTabClick = (tabId) => {
@@ -78,7 +76,7 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled,
             sounds.playClick();
             onOpenTeacherGuide();
           }}
-          title="Open Academic Presentation Walkthrough"
+          title="Open Academic Defense Walkthrough"
         >
           <GraduationCap size={16} />
           <span>Teacher Mode</span>
