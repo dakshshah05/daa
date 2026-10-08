@@ -179,8 +179,9 @@ export function RouterCanvas({
       const w = rect.width;
       const h = rect.height;
 
-      // 1. Background Grid
-      ctx.fillStyle = '#080d17';
+      // 1. Translucent Glass Background Grid
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(8, 13, 26, 0.65)';
       ctx.fillRect(0, 0, w, h);
 
       ctx.save();

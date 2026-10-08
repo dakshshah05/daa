@@ -160,6 +160,16 @@ export function App() {
 
   return (
     <div className="app-container">
+      {/* Background Animated Gradient Mesh & Floating Orbs for Vivid Glassmorphism */}
+      <div className="glass-ambient-container">
+        <div className="ambient-orb ambient-orb-1" />
+        <div className="ambient-orb ambient-orb-2" />
+        <div className="ambient-orb ambient-orb-3" />
+        <div className="ambient-orb ambient-orb-4" />
+        <div className="ambient-orb ambient-orb-5" />
+      </div>
+      <div className="grid-canvas-mesh" />
+
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -203,7 +213,7 @@ export function App() {
 
                     {/* Generator Controls */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(6, 10, 20, 0.9)', padding: '0.25rem 0.65rem', borderRadius: 'var(--radius-sm)', border: '2px solid #000000', boxShadow: 'var(--neo-shadow-xs)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(6, 10, 20, 0.65)', backdropFilter: 'var(--glass-blur)', padding: '0.25rem 0.65rem', borderRadius: 'var(--radius-sm)', border: '2px solid #000000', boxShadow: 'var(--neo-shadow-xs)' }}>
                         <label htmlFor="random-n-field" style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: 800 }}>n =</label>
                         <input
                           type="number"
@@ -226,7 +236,7 @@ export function App() {
                   </div>
 
                   {currentPreset && (
-                    <div style={{ fontSize: '0.82rem', color: '#cbd5e1', borderTop: '2px solid #000000', paddingTop: '0.65rem', marginTop: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <div style={{ fontSize: '0.82rem', color: '#cbd5e1', borderTop: '1.5px solid rgba(255, 255, 255, 0.15)', paddingTop: '0.65rem', marginTop: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                       <strong style={{ color: '#fbbf24' }}>Premise:</strong> {currentPreset.description}
                     </div>
                   )}
