@@ -172,11 +172,11 @@ export function BenchmarkSuite({ speed = 100 }) {
       {
         label: 'DP (O(n² 2ⁿ))',
         data: benchmarkData.map((d) => (d.dpAvgMs !== null ? Math.max(0.01, d.dpAvgMs) : null)),
-        borderColor: '#10b981',
-        backgroundColor: 'rgba(16, 185, 129, 0.25)',
+        borderColor: '#97A87A',
+        backgroundColor: 'rgba(151, 168, 122, 0.35)',
         borderWidth: 3,
-        pointBackgroundColor: '#10b981',
-        pointBorderColor: '#000000',
+        pointBackgroundColor: '#97A87A',
+        pointBorderColor: '#232B20',
         pointBorderWidth: 2,
         pointRadius: 5,
         tension: 0.3
@@ -184,11 +184,11 @@ export function BenchmarkSuite({ speed = 100 }) {
       {
         label: 'Backtracking B&B',
         data: benchmarkData.map((d) => (d.bbAvgMs !== null ? Math.max(0.01, d.bbAvgMs) : null)),
-        borderColor: '#06b6d4',
-        backgroundColor: 'rgba(6, 182, 212, 0.25)',
+        borderColor: '#A8BBA3',
+        backgroundColor: 'rgba(168, 187, 163, 0.35)',
         borderWidth: 3,
-        pointBackgroundColor: '#06b6d4',
-        pointBorderColor: '#000000',
+        pointBackgroundColor: '#A8BBA3',
+        pointBorderColor: '#232B20',
         pointBorderWidth: 2,
         pointRadius: 5,
         tension: 0.3
@@ -196,12 +196,12 @@ export function BenchmarkSuite({ speed = 100 }) {
       {
         label: 'Naive Search (O(n!))',
         data: benchmarkData.map((d) => (d.bbNaiveAvgMs !== null ? Math.max(0.01, d.bbNaiveAvgMs) : null)),
-        borderColor: '#ff3366',
-        backgroundColor: 'rgba(255, 51, 102, 0.25)',
+        borderColor: '#DB9558',
+        backgroundColor: 'rgba(219, 149, 88, 0.3)',
         borderDash: [6, 6],
         borderWidth: 3,
-        pointBackgroundColor: '#ff3366',
-        pointBorderColor: '#000000',
+        pointBackgroundColor: '#DB9558',
+        pointBorderColor: '#232B20',
         pointBorderWidth: 2,
         pointRadius: 5,
         tension: 0.3
@@ -209,11 +209,11 @@ export function BenchmarkSuite({ speed = 100 }) {
       {
         label: 'Greedy (O(n²))',
         data: benchmarkData.map((d) => (d.greedyAvgMs !== null ? Math.max(0.005, d.greedyAvgMs) : null)),
-        borderColor: '#fbbf24',
-        backgroundColor: 'rgba(251, 191, 36, 0.25)',
+        borderColor: '#DB9558',
+        backgroundColor: 'rgba(219, 149, 88, 0.25)',
         borderWidth: 3,
-        pointBackgroundColor: '#fbbf24',
-        pointBorderColor: '#000000',
+        pointBackgroundColor: '#DB9558',
+        pointBorderColor: '#232B20',
         pointBorderWidth: 2,
         pointRadius: 5,
         tension: 0.3
@@ -227,8 +227,8 @@ export function BenchmarkSuite({ speed = 100 }) {
       {
         label: 'Greedy Suboptimality Gap (%)',
         data: benchmarkData.filter((d) => d.greedyGapPct !== null).map((d) => d.greedyGapPct.toFixed(2)),
-        backgroundColor: '#fbbf24',
-        borderColor: '#000000',
+        backgroundColor: '#DB9558',
+        borderColor: '#232B20',
         borderWidth: 2,
         borderRadius: 4
       }
@@ -241,8 +241,8 @@ export function BenchmarkSuite({ speed = 100 }) {
       {
         label: 'B&B Explored Nodes',
         data: benchmarkData.filter((d) => d.bbAvgNodes !== null).map((d) => d.bbAvgNodes),
-        borderColor: '#06b6d4',
-        backgroundColor: 'rgba(6, 182, 212, 0.35)',
+        borderColor: '#97A87A',
+        backgroundColor: 'rgba(151, 168, 122, 0.35)',
         borderWidth: 3,
         fill: true,
         tension: 0.3
@@ -250,7 +250,7 @@ export function BenchmarkSuite({ speed = 100 }) {
       {
         label: 'Naive BT Explored Nodes (n!)',
         data: benchmarkData.filter((d) => d.bbAvgNodes !== null).map((d) => d.bbNaiveAvgNodes),
-        borderColor: '#ff3366',
+        borderColor: '#DB9558',
         borderDash: [5, 5],
         borderWidth: 3,
         tension: 0.3
@@ -266,8 +266,8 @@ export function BenchmarkSuite({ speed = 100 }) {
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 700 }}>
-              <label htmlFor="k-trials-select" style={{ color: 'var(--text-secondary)' }}>Averaging Trials:</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.86rem', fontWeight: 800, color: '#1C2319' }}>
+              <label htmlFor="k-trials-select">Averaging Trials:</label>
               <select
                 id="k-trials-select"
                 className="form-select"
@@ -301,10 +301,10 @@ export function BenchmarkSuite({ speed = 100 }) {
 
         {/* Progress Bar */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginTop: '0.65rem' }}>
-          <div style={{ width: '100%', height: '10px', background: 'rgba(6, 10, 20, 0.9)', borderRadius: '4px', overflow: 'hidden', border: '2px solid #000000', boxShadow: 'var(--neo-shadow-xs)' }}>
-            <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(90deg, #38bdf8, #10b981)', transition: 'width 0.2s ease' }} />
+          <div style={{ width: '100%', height: '10px', background: 'rgba(168, 187, 163, 0.45)', borderRadius: '4px', overflow: 'hidden', border: '2px solid #232B20', boxShadow: 'var(--neo-shadow-xs)' }}>
+            <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(90deg, #97A87A, #DB9558)', transition: 'width 0.2s ease' }} />
           </div>
-          <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600 }}>{statusText}</span>
+          <span style={{ fontSize: '0.84rem', color: '#1C2319', fontWeight: 700 }}>{statusText}</span>
         </div>
       </div>
 
@@ -313,9 +313,9 @@ export function BenchmarkSuite({ speed = 100 }) {
         
         {/* Runtime Scaling (Full width) */}
         <div className="stage-card" style={{ gridColumn: '1 / -1', height: '400px' }}>
-          <div style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.55rem', borderBottom: '2px solid #000', paddingBottom: '0.5rem' }}>
-            <div style={{ width: '28px', height: '28px', background: '#10b981', borderRadius: '4px', border: '1.5px solid #000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '1px 1px 0px #000' }}>
-              <TrendingUp size={18} color="#000000" />
+          <div style={{ fontSize: '1.02rem', fontWeight: 900, color: '#1C2319', display: 'flex', alignItems: 'center', gap: '0.55rem', borderBottom: '2px solid #232B20', paddingBottom: '0.5rem' }}>
+            <div style={{ width: '28px', height: '28px', background: '#97A87A', borderRadius: '4px', border: '1.5px solid #232B20', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '1px 1px 0px #232B20' }}>
+              <TrendingUp size={18} color="#FCF9EA" />
             </div>
             <span>Execution Runtime vs Number of Locations (n) — Logarithmic Scale</span>
           </div>
@@ -328,17 +328,17 @@ export function BenchmarkSuite({ speed = 100 }) {
                 scales: {
                   y: {
                     type: 'logarithmic',
-                    title: { display: true, text: 'Runtime (ms - log scale)', color: '#94a3b8', font: { weight: 'bold' } },
-                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
-                    ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } }
+                    title: { display: true, text: 'Runtime (ms - log scale)', color: '#1C2319', font: { weight: 'bold' } },
+                    grid: { color: 'rgba(35, 43, 32, 0.12)' },
+                    ticks: { color: '#1C2319', font: { family: 'JetBrains Mono' } }
                   },
                   x: {
-                    title: { display: true, text: 'Number of Locations (n)', color: '#94a3b8', font: { weight: 'bold' } },
-                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
-                    ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } }
+                    title: { display: true, text: 'Number of Locations (n)', color: '#1C2319', font: { weight: 'bold' } },
+                    grid: { color: 'rgba(35, 43, 32, 0.12)' },
+                    ticks: { color: '#1C2319', font: { family: 'JetBrains Mono' } }
                   }
                 },
-                plugins: { legend: { labels: { color: '#ffffff', font: { weight: 'bold' } } } }
+                plugins: { legend: { labels: { color: '#1C2319', font: { weight: 'bold' } } } }
               }}
             />
           </div>
@@ -346,9 +346,9 @@ export function BenchmarkSuite({ speed = 100 }) {
 
         {/* Greedy Gap */}
         <div className="stage-card" style={{ height: '360px' }}>
-          <div style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.55rem', borderBottom: '2px solid #000', paddingBottom: '0.5rem' }}>
-            <div style={{ width: '28px', height: '28px', background: '#fbbf24', borderRadius: '4px', border: '1.5px solid #000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '1px 1px 0px #000' }}>
-              <Zap size={18} color="#000000" />
+          <div style={{ fontSize: '1.02rem', fontWeight: 900, color: '#1C2319', display: 'flex', alignItems: 'center', gap: '0.55rem', borderBottom: '2px solid #232B20', paddingBottom: '0.5rem' }}>
+            <div style={{ width: '28px', height: '28px', background: '#DB9558', borderRadius: '4px', border: '1.5px solid #232B20', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '1px 1px 0px #232B20' }}>
+              <Zap size={18} color="#FCF9EA" />
             </div>
             <span>Greedy Heuristic Optimality Gap (%) vs Optimal DP</span>
           </div>
@@ -360,13 +360,13 @@ export function BenchmarkSuite({ speed = 100 }) {
                 maintainAspectRatio: false,
                 scales: {
                   y: {
-                    title: { display: true, text: 'Optimality Gap %', color: '#94a3b8', font: { weight: 'bold' } },
-                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
-                    ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } }
+                    title: { display: true, text: 'Optimality Gap %', color: '#1C2319', font: { weight: 'bold' } },
+                    grid: { color: 'rgba(35, 43, 32, 0.12)' },
+                    ticks: { color: '#1C2319', font: { family: 'JetBrains Mono' } }
                   },
-                  x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } } }
+                  x: { grid: { color: 'rgba(35, 43, 32, 0.12)' }, ticks: { color: '#1C2319', font: { family: 'JetBrains Mono' } } }
                 },
-                plugins: { legend: { labels: { color: '#ffffff', font: { weight: 'bold' } } } }
+                plugins: { legend: { labels: { color: '#1C2319', font: { weight: 'bold' } } } }
               }}
             />
           </div>
@@ -374,9 +374,9 @@ export function BenchmarkSuite({ speed = 100 }) {
 
         {/* Pruning Efficiency */}
         <div className="stage-card" style={{ height: '360px' }}>
-          <div style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.55rem', borderBottom: '2px solid #000', paddingBottom: '0.5rem' }}>
-            <div style={{ width: '28px', height: '28px', background: '#06b6d4', borderRadius: '4px', border: '1.5px solid #000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '1px 1px 0px #000' }}>
-              <Cpu size={18} color="#000000" />
+          <div style={{ fontSize: '1.02rem', fontWeight: 900, color: '#1C2319', display: 'flex', alignItems: 'center', gap: '0.55rem', borderBottom: '2px solid #232B20', paddingBottom: '0.5rem' }}>
+            <div style={{ width: '28px', height: '28px', background: '#A8BBA3', borderRadius: '4px', border: '1.5px solid #232B20', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '1px 1px 0px #232B20' }}>
+              <Cpu size={18} color="#1C2319" />
             </div>
             <span>Branch & Bound Pruning Efficiency (Nodes Explored)</span>
           </div>
@@ -389,13 +389,13 @@ export function BenchmarkSuite({ speed = 100 }) {
                 scales: {
                   y: {
                     type: 'logarithmic',
-                    title: { display: true, text: 'Nodes Explored (log scale)', color: '#94a3b8', font: { weight: 'bold' } },
-                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
-                    ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } }
+                    title: { display: true, text: 'Nodes Explored (log scale)', color: '#1C2319', font: { weight: 'bold' } },
+                    grid: { color: 'rgba(35, 43, 32, 0.12)' },
+                    ticks: { color: '#1C2319', font: { family: 'JetBrains Mono' } }
                   },
-                  x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } } }
+                  x: { grid: { color: 'rgba(35, 43, 32, 0.12)' }, ticks: { color: '#1C2319', font: { family: 'JetBrains Mono' } } }
                 },
-                plugins: { legend: { labels: { color: '#ffffff', font: { weight: 'bold' } } } }
+                plugins: { legend: { labels: { color: '#1C2319', font: { weight: 'bold' } } } }
               }}
             />
           </div>
@@ -406,10 +406,10 @@ export function BenchmarkSuite({ speed = 100 }) {
       {/* Tabular Benchmark Output */}
       {benchmarkData.length > 0 && (
         <div className="stage-card">
-          <div style={{ overflowX: 'auto', borderRadius: 'var(--radius-sm)', border: '2px solid #000', boxShadow: 'var(--neo-shadow-xs)' }}>
+          <div style={{ overflowX: 'auto', borderRadius: 'var(--radius-sm)', border: '2px solid #232B20', boxShadow: 'var(--neo-shadow-xs)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem', fontFamily: 'JetBrains Mono' }}>
               <thead>
-                <tr style={{ background: 'rgba(6, 10, 20, 0.95)', borderBottom: '2px solid #000000', textAlign: 'left', color: '#fff' }}>
+                <tr style={{ background: 'rgba(168, 187, 163, 0.45)', borderBottom: '2px solid #232B20', textAlign: 'left', color: '#1C2319' }}>
                   <th style={{ padding: '0.75rem 1rem' }}>Instances (n)</th>
                   <th style={{ padding: '0.75rem 1rem' }}>DP Avg Runtime</th>
                   <th style={{ padding: '0.75rem 1rem' }}>B&B Avg Runtime</th>
@@ -421,16 +421,16 @@ export function BenchmarkSuite({ speed = 100 }) {
               </thead>
               <tbody>
                 {benchmarkData.map((r) => (
-                  <tr key={r.n} style={{ borderBottom: '1.5px solid #000000', background: 'rgba(15, 23, 42, 0.65)' }}>
-                    <td style={{ padding: '0.75rem 1rem', fontWeight: 800, color: '#38bdf8' }}>n = {r.n}</td>
-                    <td style={{ padding: '0.75rem 1rem', color: '#34d399', fontWeight: 700 }}>{r.dpAvgMs !== null ? `${r.dpAvgMs.toFixed(2)} ms` : '-'}</td>
-                    <td style={{ padding: '0.75rem 1rem', color: '#22d3ee' }}>{r.bbAvgMs !== null ? `${r.bbAvgMs.toFixed(2)} ms` : '-'}</td>
-                    <td style={{ padding: '0.75rem 1rem', color: '#ff3366' }}>{r.bbNaiveAvgMs !== null ? `${r.bbNaiveAvgMs.toFixed(2)} ms` : '-'}</td>
-                    <td style={{ padding: '0.75rem 1rem', color: '#fbbf24' }}>{r.greedyAvgMs !== null ? `${r.greedyAvgMs.toFixed(3)} ms` : '-'}</td>
-                    <td style={{ padding: '0.75rem 1rem' }}>{r.bbAvgNodes !== null ? r.bbAvgNodes.toLocaleString() : '-'}</td>
+                  <tr key={r.n} style={{ borderBottom: '1.5px solid #232B20', background: 'rgba(252, 249, 234, 0.75)' }}>
+                    <td style={{ padding: '0.75rem 1rem', fontWeight: 900, color: '#DB9558' }}>n = {r.n}</td>
+                    <td style={{ padding: '0.75rem 1rem', color: '#526639', fontWeight: 800 }}>{r.dpAvgMs !== null ? `${r.dpAvgMs.toFixed(2)} ms` : '-'}</td>
+                    <td style={{ padding: '0.75rem 1rem', color: '#44563A', fontWeight: 800 }}>{r.bbAvgMs !== null ? `${r.bbAvgMs.toFixed(2)} ms` : '-'}</td>
+                    <td style={{ padding: '0.75rem 1rem', color: '#DB9558', fontWeight: 800 }}>{r.bbNaiveAvgMs !== null ? `${r.bbNaiveAvgMs.toFixed(2)} ms` : '-'}</td>
+                    <td style={{ padding: '0.75rem 1rem', color: '#1C2319', fontWeight: 800 }}>{r.greedyAvgMs !== null ? `${r.greedyAvgMs.toFixed(3)} ms` : '-'}</td>
+                    <td style={{ padding: '0.75rem 1rem', color: '#1C2319' }}>{r.bbAvgNodes !== null ? r.bbAvgNodes.toLocaleString() : '-'}</td>
                     <td style={{ padding: '0.75rem 1rem' }}>
                       {r.greedyGapPct !== null ? (
-                        <span className={`badge ${r.greedyGapPct > 15 ? 'badge-danger' : 'badge-warning'}`}>
+                        <span className="badge badge-warning">
                           {r.greedyGapPct.toFixed(2)}%
                         </span>
                       ) : '-'}

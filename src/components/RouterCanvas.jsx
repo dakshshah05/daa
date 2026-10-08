@@ -22,13 +22,12 @@ export function RouterCanvas({
   const animPhaseRef = useRef(0);
 
   const getNodeColor = (weight) => {
-    if (weight >= 9) return { bg: '#ef4444', glow: 'rgba(239, 68, 68, 0.65)', border: '#fca5a5' };
-    if (weight >= 7) return { bg: '#f97316', glow: 'rgba(249, 115, 22, 0.55)', border: '#fdba74' };
-    if (weight >= 4) return { bg: '#eab308', glow: 'rgba(234, 179, 8, 0.45)', border: '#fde047' };
-    return { bg: '#10b981', glow: 'rgba(16, 185, 129, 0.45)', border: '#6ee7b7' };
+    if (weight >= 7) return { bg: '#DB9558', glow: 'rgba(219, 149, 88, 0.5)', border: '#232B20', text: '#FCF9EA' };
+    if (weight >= 4) return { bg: '#97A87A', glow: 'rgba(151, 168, 122, 0.5)', border: '#232B20', text: '#FCF9EA' };
+    return { bg: '#A8BBA3', glow: 'rgba(168, 187, 163, 0.5)', border: '#232B20', text: '#1C2319' };
   };
 
-  const getNodeRadius = (weight) => 12 + ((weight - 1) / 9) * 8;
+  const getNodeRadius = (weight) => 13 + ((weight - 1) / 9) * 8;
 
   const getCoords = (e) => {
     const canvas = canvasRef.current;
@@ -179,13 +178,13 @@ export function RouterCanvas({
       const w = rect.width;
       const h = rect.height;
 
-      // 1. Translucent Glass Background Grid
+      // 1. Clear and Translucent Glass Background Grid
       ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = 'rgba(8, 13, 26, 0.65)';
+      ctx.fillStyle = 'rgba(252, 249, 234, 0.75)';
       ctx.fillRect(0, 0, w, h);
 
       ctx.save();
-      ctx.strokeStyle = 'rgba(30, 41, 59, 0.4)';
+      ctx.strokeStyle = 'rgba(151, 168, 122, 0.3)';
       ctx.lineWidth = 1;
       const gridSize = 40;
       ctx.beginPath();
@@ -201,8 +200,8 @@ export function RouterCanvas({
 
       // Atmospheric radial gradient
       const bgGrad = ctx.createRadialGradient(depot.x, depot.y, 20, depot.x, depot.y, Math.max(w, h));
-      bgGrad.addColorStop(0, 'rgba(6, 182, 212, 0.06)');
-      bgGrad.addColorStop(1, 'rgba(8, 13, 23, 0)');
+      bgGrad.addColorStop(0, 'rgba(219, 149, 88, 0.12)');
+      bgGrad.addColorStop(1, 'rgba(168, 187, 163, 0.05)');
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, w, h);
       ctx.restore();
@@ -210,7 +209,7 @@ export function RouterCanvas({
       // 2. Mesh connections
       if (locations.length > 1) {
         ctx.save();
-        ctx.strokeStyle = 'rgba(51, 65, 85, 0.16)';
+        ctx.strokeStyle = 'rgba(151, 168, 122, 0.35)';
         ctx.lineWidth = 1;
         ctx.setLineDash([3, 5]);
         ctx.beginPath();
@@ -229,9 +228,9 @@ export function RouterCanvas({
 
       // 3. Draw Active Route(s)
       const routeConfigs = {
-        dp: { color: '#10b981', glow: 'rgba(16, 185, 129, 0.5)', width: 3.5, dash: [], offset: 0 },
-        backtracking: { color: '#06b6d4', glow: 'rgba(6, 182, 212, 0.5)', width: 2.5, dash: [6, 4], offset: -4 },
-        greedy: { color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.5)', width: 2.5, dash: [3, 4], offset: 4 }
+        dp: { color: '#97A87A', glow: 'rgba(151, 168, 122, 0.5)', width: 3.5, dash: [], offset: 0 },
+        backtracking: { color: '#A8BBA3', glow: 'rgba(168, 187, 163, 0.5)', width: 3, dash: [6, 4], offset: -4 },
+        greedy: { color: '#DB9558', glow: 'rgba(219, 149, 88, 0.5)', width: 3, dash: [3, 4], offset: 4 }
       };
 
       const routesToRender = [];
@@ -255,7 +254,7 @@ export function RouterCanvas({
         ctx.lineWidth = cfg.width;
         ctx.setLineDash(cfg.dash);
         ctx.shadowColor = cfg.glow;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 8;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 
@@ -302,18 +301,18 @@ export function RouterCanvas({
         const col = getNodeColor(loc.weight);
 
         ctx.save();
-        if (loc.weight >= 9) {
+        if (loc.weight >= 8) {
           const pulse = (Math.sin(animPhaseRef.current * 2.5) + 1) / 2;
           ctx.beginPath();
           ctx.arc(loc.x, loc.y, r + 6 + pulse * 8, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(239, 68, 68, ${0.15 + pulse * 0.2})`;
+          ctx.fillStyle = `rgba(219, 149, 88, ${0.2 + pulse * 0.25})`;
           ctx.fill();
         }
 
         if (isSelected) {
           ctx.beginPath();
           ctx.arc(loc.x, loc.y, r + 7, 0, Math.PI * 2);
-          ctx.strokeStyle = '#38bdf8';
+          ctx.strokeStyle = '#232B20';
           ctx.lineWidth = 2.5;
           ctx.setLineDash([4, 4]);
           ctx.stroke();
@@ -323,22 +322,22 @@ export function RouterCanvas({
         ctx.arc(loc.x, loc.y, r, 0, Math.PI * 2);
         ctx.fillStyle = col.bg;
         ctx.shadowColor = col.glow;
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 10;
         ctx.fill();
 
-        ctx.strokeStyle = isSelected ? '#ffffff' : col.border;
-        ctx.lineWidth = isSelected ? 3 : 2;
+        ctx.strokeStyle = '#232B20';
+        ctx.lineWidth = 2.2;
         ctx.stroke();
 
         ctx.shadowBlur = 0;
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = col.text;
         ctx.font = 'bold 10px JetBrains Mono, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(`W${loc.weight}`, loc.x, loc.y);
 
-        ctx.font = '500 10.5px Inter, sans-serif';
-        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '700 11px Plus Jakarta Sans, sans-serif';
+        ctx.fillStyle = '#1C2319';
         ctx.fillText(loc.name, loc.x, loc.y + r + 13);
 
         const activeSol = activeRoutes?.[currentSolver] || activeRoutes?.dp || activeRoutes?.greedy;
@@ -346,15 +345,15 @@ export function RouterCanvas({
           const stepIndex = activeSol.order.indexOf(idx);
           if (stepIndex !== -1) {
             ctx.beginPath();
-            ctx.arc(loc.x - r * 0.7, loc.y - r * 0.7, 8.5, 0, Math.PI * 2);
-            ctx.fillStyle = '#080d17';
+            ctx.arc(loc.x - r * 0.7, loc.y - r * 0.7, 9, 0, Math.PI * 2);
+            ctx.fillStyle = '#FCF9EA';
             ctx.fill();
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 1.8;
+            ctx.strokeStyle = '#232B20';
+            ctx.lineWidth = 2;
             ctx.stroke();
 
-            ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 8.5px JetBrains Mono, sans-serif';
+            ctx.fillStyle = '#232B20';
+            ctx.font = 'bold 9px JetBrains Mono, sans-serif';
             ctx.fillText(`${stepIndex + 1}`, loc.x - r * 0.7, loc.y - r * 0.7);
           }
         }
@@ -366,8 +365,8 @@ export function RouterCanvas({
       const radarR = 22 + Math.sin(animPhaseRef.current) * 6;
       ctx.beginPath();
       ctx.arc(depot.x, depot.y, radarR, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(234, 179, 8, 0.35)';
-      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(219, 149, 88, 0.45)';
+      ctx.lineWidth = 2;
       ctx.stroke();
 
       const dSize = 16;
@@ -377,23 +376,23 @@ export function RouterCanvas({
       ctx.lineTo(depot.x, depot.y + dSize);
       ctx.lineTo(depot.x - dSize, depot.y);
       ctx.closePath();
-      ctx.fillStyle = '#eab308';
-      ctx.shadowColor = 'rgba(234, 179, 8, 0.8)';
-      ctx.shadowBlur = 16;
+      ctx.fillStyle = '#DB9558';
+      ctx.shadowColor = 'rgba(219, 149, 88, 0.6)';
+      ctx.shadowBlur = 12;
       ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = '#232B20';
+      ctx.lineWidth = 2.5;
       ctx.stroke();
 
       ctx.shadowBlur = 0;
-      ctx.fillStyle = '#080d17';
-      ctx.font = 'bold 10.5px Inter, sans-serif';
+      ctx.fillStyle = '#FCF9EA';
+      ctx.font = '900 10.5px Plus Jakarta Sans, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('HQ', depot.x, depot.y);
 
-      ctx.font = '600 11.5px Inter, sans-serif';
-      ctx.fillStyle = '#fde047';
+      ctx.font = '800 12px Plus Jakarta Sans, sans-serif';
+      ctx.fillStyle = '#1C2319';
       ctx.fillText(depot.name || 'HQ Relief Hub', depot.x, depot.y + dSize + 15);
       ctx.restore();
 
@@ -429,8 +428,8 @@ export function RouterCanvas({
           ctx.rotate(angle);
 
           const grad = ctx.createRadialGradient(10, 0, 2, 42, 0, 32);
-          grad.addColorStop(0, 'rgba(56, 189, 248, 0.6)');
-          grad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+          grad.addColorStop(0, 'rgba(219, 149, 88, 0.6)');
+          grad.addColorStop(1, 'rgba(219, 149, 88, 0)');
           ctx.fillStyle = grad;
           ctx.beginPath();
           ctx.moveTo(10, -7);
@@ -440,23 +439,21 @@ export function RouterCanvas({
           ctx.closePath();
           ctx.fill();
 
-          ctx.fillStyle = '#f8fafc';
-          ctx.shadowColor = '#38bdf8';
-          ctx.shadowBlur = 14;
+          ctx.fillStyle = '#FCF9EA';
           ctx.beginPath();
-          ctx.roundRect(-15, -9, 30, 18, [3, 7, 7, 3]);
+          ctx.roundRect(-15, -9, 30, 18, [4, 7, 7, 4]);
           ctx.fill();
-          ctx.strokeStyle = '#0284c7';
-          ctx.lineWidth = 1.8;
+          ctx.strokeStyle = '#232B20';
+          ctx.lineWidth = 2.2;
           ctx.stroke();
 
-          const isRed = Math.floor(animPhaseRef.current * 8) % 2 === 0;
           ctx.beginPath();
           ctx.arc(0, 0, 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = isRed ? '#ef4444' : '#38bdf8';
-          ctx.shadowColor = isRed ? '#ef4444' : '#38bdf8';
-          ctx.shadowBlur = 10;
+          ctx.fillStyle = '#DB9558';
           ctx.fill();
+          ctx.strokeStyle = '#232B20';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
 
           ctx.restore();
         }
@@ -495,7 +492,7 @@ export function RouterCanvas({
         <div className="legend-line"><span className="legend-swatch dp"></span> <span>DP Exact Global Optimal</span></div>
         <div className="legend-line"><span className="legend-swatch bb"></span> <span>Branch & Bound (B&B)</span></div>
         <div className="legend-line"><span className="legend-swatch greedy"></span> <span>Greedy Ratio Heuristic</span></div>
-        <div className="legend-line"><span className="legend-swatch crit"></span> <span>Critical Trauma W=9-10</span></div>
+        <div className="legend-line"><span className="legend-swatch crit"></span> <span>High Urgency (W ≥ 7)</span></div>
       </div>
     </div>
   );

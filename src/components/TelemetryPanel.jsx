@@ -56,7 +56,7 @@ export function TelemetryPanel({
         particleCount: 50,
         spread: 60,
         origin: { y: 0.8 },
-        colors: ['#10b981', '#38bdf8', '#fbbf24']
+        colors: ['#DB9558', '#97A87A', '#A8BBA3']
       });
     }
   };
@@ -97,10 +97,9 @@ export function TelemetryPanel({
   }
 
   const getNodeColor = (weight) => {
-    if (weight >= 9) return '#ef4444';
-    if (weight >= 7) return '#f97316';
-    if (weight >= 4) return '#eab308';
-    return '#10b981';
+    if (weight >= 7) return '#DB9558';
+    if (weight >= 4) return '#97A87A';
+    return '#A8BBA3';
   };
 
   return (
@@ -130,30 +129,30 @@ export function TelemetryPanel({
 
         <div className="telemetry-metrics">
           <div className="metric-unit">
-            <span className="metric-label"><Activity size={10} style={{ display: 'inline' }} /> Transit Progress</span>
+            <span className="metric-label"><Activity size={12} style={{ display: 'inline' }} /> Transit Progress</span>
             <span className="metric-value">{currentStepText}</span>
           </div>
           <div className="metric-unit">
-            <span className="metric-label"><Clock size={10} style={{ display: 'inline' }} /> Elapsed Time</span>
+            <span className="metric-label"><Clock size={12} style={{ display: 'inline' }} /> Elapsed Time</span>
             <span className="metric-value">{liveTime.toFixed(1)}s</span>
           </div>
           <div className="metric-unit">
-            <span className="metric-label"><Zap size={10} style={{ display: 'inline' }} /> Weighted Delay Penalty</span>
+            <span className="metric-label"><Zap size={12} style={{ display: 'inline' }} /> Weighted Delay Penalty</span>
             <span className="metric-value highlight-red">{liveDelay.toFixed(1)}</span>
           </div>
         </div>
       </div>
 
       {/* Sequence Chips */}
-      <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '0.75rem 1rem' }}>
-        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+      <div style={{ background: 'rgba(252, 249, 234, 0.75)', backdropFilter: 'var(--glass-blur)', border: '2px solid #232B20', borderRadius: 'var(--radius-md)', padding: '0.85rem 1.15rem', boxShadow: 'var(--neo-shadow-xs)' }}>
+        <div style={{ fontSize: '0.74rem', color: '#5E6C58', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.04em' }}>
           Route Dispatch Schedule ({activeSol?.name || 'Active Solver'})
         </div>
 
         <div className="route-sequence-wrapper">
           <span className="seq-chip depot">
-            <strong>🏁 HQ Depot</strong>
-            <small>t = 0.0s</small>
+            <strong style={{ color: '#1C2319' }}>🏁 HQ Depot</strong>
+            <small style={{ color: '#5E6C58', fontWeight: 700 }}>t = 0.0s</small>
           </span>
 
           {activeSol?.arrivalTimes?.map((step, idx) => {
@@ -165,9 +164,9 @@ export function TelemetryPanel({
             return (
               <React.Fragment key={idx}>
                 <span className="seq-arrow">➔</span>
-                <span className="seq-chip" style={{ borderLeft: `4px solid ${getNodeColor(weight)}` }}>
-                  <strong>#{idx + 1} {name}</strong>
-                  <small>
+                <span className="seq-chip" style={{ borderLeft: `5px solid ${getNodeColor(weight)}` }}>
+                  <strong style={{ color: '#1C2319' }}>#{idx + 1} {name}</strong>
+                  <small style={{ color: '#5E6C58', fontWeight: 700 }}>
                     t = {arrTime}s (W{weight}, pen: {penVal})
                   </small>
                 </span>

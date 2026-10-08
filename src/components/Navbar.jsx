@@ -35,7 +35,7 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled,
     <header className="navbar">
       <div className="brand-section">
         <div className="brand-icon-box" title="Emergency Response System">
-          <Activity size={20} />
+          <Activity size={22} color="#FCF9EA" />
         </div>
         <div className="brand-title-wrap">
           <div className="brand-title">
@@ -60,7 +60,7 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled,
               role="tab"
               aria-selected={isActive}
             >
-              <Icon size={14} />
+              <Icon size={15} />
               <span>{tab.label}</span>
             </button>
           );
@@ -77,7 +77,7 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled,
           }}
           title="Open Academic Presentation Guide"
         >
-          <GraduationCap size={15} />
+          <GraduationCap size={16} />
           <span>Walkthrough</span>
         </button>
 
@@ -87,7 +87,7 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled,
           title={audioEnabled ? 'Mute Audio Effects' : 'Enable Audio Synthesizer'}
           aria-label="Toggle Sound Effects"
         >
-          {audioEnabled ? <Volume2 size={16} color="#10b981" /> : <VolumeX size={16} color="#64748b" />}
+          {audioEnabled ? <Volume2 size={17} color="#97A87A" /> : <VolumeX size={17} color="#5E6C58" />}
         </button>
 
         <a
@@ -98,7 +98,7 @@ export function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled,
           title="View Source on GitHub"
           aria-label="GitHub Repository"
         >
-          <Github size={16} />
+          <Github size={17} />
         </a>
       </div>
     </header>
