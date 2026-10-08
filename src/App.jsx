@@ -176,43 +176,47 @@ export function App() {
               {/* Left Stage */}
               <section style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem', minWidth: 0 }}>
                 
-                {/* Presets & Random Bento Bar */}
-                <div className="stage-card" style={{ padding: '0.65rem 1rem' }}>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.6rem' }}>
+                {/* Presets & Scenario Toolbar */}
+                <div className="stage-card" style={{ padding: '0.75rem 1.15rem' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
                     
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: '260px' }}>
-                      <label htmlFor="preset-select-dropdown" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>Preset:</label>
-                      <select
-                        id="preset-select-dropdown"
-                        className="form-select"
-                        style={{ flex: 1, padding: '0.35rem 0.65rem', fontSize: '0.78rem' }}
-                        value={currentPresetId}
-                        onChange={(e) => loadPresetById(e.target.value)}
-                      >
-                        {PRESET_SCENARIOS.map((p) => (
-                          <option key={p.id} value={p.id}>{p.name}</option>
-                        ))}
-                      </select>
+                    {/* Preset Chips */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', flex: 1 }}>
+                      <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Scenarios:</span>
+                      <div className="preset-pills-bar">
+                        {PRESET_SCENARIOS.map((p) => {
+                          const isActive = p.id === currentPresetId;
+                          return (
+                            <button
+                              key={p.id}
+                              className={`preset-chip-btn ${isActive ? 'active' : ''}`}
+                              onClick={() => loadPresetById(p.id)}
+                            >
+                              <span>{p.name.split('(')[0]}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                        <label htmlFor="random-n-field" style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>n =</label>
+                    {/* Generator Controls */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', background: 'var(--bg-primary)', padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                        <label htmlFor="random-n-field" style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', fontWeight: 600 }}>n =</label>
                         <input
                           type="number"
                           id="random-n-field"
-                          className="form-input"
-                          style={{ width: '48px', padding: '0.35rem 0.2rem', textAlign: 'center', fontSize: '0.78rem' }}
+                          style={{ width: '38px', background: 'transparent', border: 'none', color: '#fff', textAlign: 'center', fontSize: '0.8rem', fontWeight: 700, outline: 'none' }}
                           min="3"
                           max="18"
                           value={randomN}
                           onChange={(e) => setRandomN(Number(e.target.value))}
                         />
                       </div>
-                      <button className="btn btn-secondary btn-sm" onClick={handleGenerateRandom}>
+                      <button className="btn btn-secondary btn-sm" onClick={handleGenerateRandom} title="Generate Random Graph">
                         <Dices size={13} /> Random
                       </button>
-                      <button className="btn btn-outline btn-sm" onClick={handleClear}>
+                      <button className="btn btn-outline btn-sm" onClick={handleClear} title="Clear All Nodes">
                         <Trash2 size={13} /> Clear
                       </button>
                     </div>
@@ -220,8 +224,8 @@ export function App() {
                   </div>
 
                   {currentPreset && (
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                      {currentPreset.description}
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.5rem', marginTop: '0.25rem' }}>
+                      <strong>Premise:</strong> {currentPreset.description}
                     </div>
                   )}
                 </div>

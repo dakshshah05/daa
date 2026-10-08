@@ -116,16 +116,16 @@ function SolveGreedy(depot, locations, speed):
     <div style={{ maxWidth: '1180px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       
       {/* 1. Header Hero Banner */}
-      <div className="stage-card" style={{ padding: '2rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%)', border: '1px solid rgba(16, 185, 129, 0.4)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#10b981', fontWeight: 800, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-          <Sparkles size={16} /> DAA Project Core Defense & Justification
+      <div className="stage-card" style={{ padding: '1.75rem', background: 'var(--bg-card)', border: '1px solid var(--border-medium)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-blue)', fontWeight: 700, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+          <ShieldCheck size={16} /> DAA Project Core Defense & Justification
         </div>
-        <h2 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#fff', marginTop: '0.4rem', letterSpacing: '-0.02em' }}>
+        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#fff', marginTop: '0.35rem', letterSpacing: '-0.015em' }}>
           Why Dynamic Programming is the Optimal Choice
         </h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.96rem', lineHeight: 1.7, marginTop: '0.6rem', maxWidth: '950px' }}>
-          In emergency triage logistics, choosing the wrong algorithm costs human lives. 
-          Below is the rigorous mathematical derivation of time and space complexity, basic algorithmic pseudocode, and an analytical comparison showing why <strong>Bitmask Dynamic Programming</strong> outperforms Greedy and Backtracking.
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.65, marginTop: '0.5rem', maxWidth: '950px' }}>
+          In emergency triage routing, selecting an algorithm with sub-optimal routing guarantees directly increases cumulative patient latency. 
+          Below is the mathematical derivation of time and space complexity, pseudocode implementations, and an empirical comparison demonstrating why <strong>Bitmask Dynamic Programming</strong> provides the best trade-off between optimality and runtime predictability.
         </p>
       </div>
 
@@ -133,125 +133,125 @@ function SolveGreedy(depot, locations, speed):
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
         
         {/* DP Card (Winner) */}
-        <div className="stage-card" style={{ border: '2px solid #10b981', background: 'rgba(16, 185, 129, 0.06)', position: 'relative' }}>
+        <div className="stage-card" style={{ border: '1px solid var(--accent-emerald)', background: 'rgba(16, 185, 129, 0.04)', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-            <span className="badge badge-success" style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}>
+            <span className="badge badge-success" style={{ fontSize: '0.74rem', padding: '0.2rem 0.55rem' }}>
               <CheckCircle2 size={12} /> BEST CHOICE
             </span>
           </div>
 
-          <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981', marginBottom: '0.5rem' }}>
-            <Cpu size={24} />
+          <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-sm)', background: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981', marginBottom: '0.5rem' }}>
+            <Cpu size={22} />
           </div>
 
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff' }}>1. Dynamic Programming</h3>
-          <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: '#34d399', fontWeight: 700 }}>
+          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fff' }}>1. Dynamic Programming</h3>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: '#34d399', fontWeight: 600 }}>
             Time: Θ(n² · 2ⁿ) | Space: Θ(n · 2ⁿ)
           </div>
 
-          <ul style={{ color: 'var(--text-secondary)', fontSize: '0.86rem', lineHeight: 1.7, marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          <ul style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: 1.65, marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
-              <CheckCircle2 size={16} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span><strong>Guaranteed Global Minimum:</strong> Always minimizes total weighted patient delay.</span>
+              <CheckCircle2 size={15} color="#10b981" style={{ flexShrink: 0, marginTop: '3px' }} />
+              <span><strong>Guaranteed Global Minimum:</strong> Always discovers the exact sequence minimizing total weighted latency.</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
-              <CheckCircle2 size={16} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span><strong>Deterministic Performance:</strong> Solves exactly 2ⁿ × n subproblems. No runtime spikes.</span>
+              <CheckCircle2 size={15} color="#10b981" style={{ flexShrink: 0, marginTop: '3px' }} />
+              <span><strong>Deterministic Complexity:</strong> Solves exactly 2ⁿ × n state pairs. No unpredictable runtime spikes.</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
-              <CheckCircle2 size={16} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span><strong>Memoized Subproblems:</strong> Eliminates re-evaluating identical sets of visited facilities.</span>
+              <CheckCircle2 size={15} color="#10b981" style={{ flexShrink: 0, marginTop: '3px' }} />
+              <span><strong>Memoized Subproblems:</strong> Reuses previous shortest paths for identical visited sets.</span>
             </li>
           </ul>
 
           <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
-            <div style={{ background: '#070b14', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '0.65rem 0.85rem', borderRadius: '8px', fontSize: '0.78rem', color: '#34d399' }}>
-              ✅ <strong>Verdict:</strong> Ideal for single-vehicle dispatch with n ≤ 18 facilities per sortie.
+            <div style={{ background: 'var(--bg-primary)', border: '1px solid rgba(16, 185, 129, 0.25)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', fontSize: '0.78rem', color: '#34d399' }}>
+              <strong>Verdict:</strong> Optimal for emergency vehicle dispatch with n ≤ 18 facilities per cluster.
             </div>
           </div>
         </div>
 
         {/* Why NOT Greedy Card */}
-        <div className="stage-card" style={{ border: '1px solid rgba(245, 158, 11, 0.4)' }}>
+        <div className="stage-card" style={{ border: '1px solid rgba(245, 158, 11, 0.35)', background: 'rgba(245, 158, 11, 0.03)' }}>
           <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-            <span className="badge badge-danger" style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}>
+            <span className="badge badge-warning" style={{ fontSize: '0.74rem', padding: '0.2rem 0.55rem' }}>
               <XCircle size={12} /> SUBOPTIMAL
             </span>
           </div>
 
-          <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f59e0b', marginBottom: '0.5rem' }}>
-            <Zap size={24} />
+          <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-sm)', background: 'rgba(245, 158, 11, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f59e0b', marginBottom: '0.5rem' }}>
+            <Zap size={22} />
           </div>
 
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff' }}>2. Why NOT Greedy?</h3>
-          <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: '#fbbf24', fontWeight: 700 }}>
+          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fff' }}>2. Why NOT Greedy?</h3>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: '#fbbf24', fontWeight: 600 }}>
             Time: O(n²) | Space: O(n)
           </div>
 
-          <ul style={{ color: 'var(--text-secondary)', fontSize: '0.86rem', lineHeight: 1.7, marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          <ul style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: 1.65, marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
-              <XCircle size={16} color="#ef4444" style={{ flexShrink: 0, marginTop: '2px' }} />
+              <XCircle size={15} color="#f59e0b" style={{ flexShrink: 0, marginTop: '3px' }} />
               <span><strong>Shortsighted Ratio Heuristic:</strong> Greedily picks next node maximizing (weight / travel_time).</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
-              <XCircle size={16} color="#ef4444" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span><strong>Catastrophic Local Traps:</strong> Easily lured into visiting clusters of minor clinics (w=2) near depot first.</span>
+              <XCircle size={15} color="#f59e0b" style={{ flexShrink: 0, marginTop: '3px' }} />
+              <span><strong>Local Minima Traps:</strong> Can be baited into visiting clusters of minor clinics (w=2) near depot first.</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
-              <XCircle size={16} color="#ef4444" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span><strong>+15.75% Higher Delay on Preset 1:</strong> St. Jude Trauma ICU (w=10) waits an extra 4.6s, multiplying mortality risk.</span>
+              <XCircle size={15} color="#f59e0b" style={{ flexShrink: 0, marginTop: '3px' }} />
+              <span><strong>Sub-optimality Penalty:</strong> In Scenario #1, critical trauma ICUs wait longer, causing unnecessary weighted delay.</span>
             </li>
           </ul>
 
           <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
             <button
               className="btn btn-sm btn-outline"
-              style={{ width: '100%', borderColor: '#f59e0b', color: '#fbbf24' }}
+              style={{ width: '100%', borderColor: 'rgba(245, 158, 11, 0.4)', color: '#fbbf24' }}
               onClick={() => {
                 if (onLoadPreset) onLoadPreset('greedy_trap');
                 if (setActiveTab) setActiveTab('canvas');
               }}
             >
-              🚨 Test the Greedy Trap Live on Canvas
+              Test Greedy Trap on Canvas
             </button>
           </div>
         </div>
 
         {/* Why NOT Backtracking Card */}
-        <div className="stage-card" style={{ border: '1px solid rgba(6, 182, 212, 0.4)' }}>
+        <div className="stage-card" style={{ border: '1px solid rgba(6, 182, 212, 0.35)', background: 'rgba(6, 182, 212, 0.03)' }}>
           <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-            <span className="badge badge-warning" style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}>
+            <span className="badge badge-danger" style={{ fontSize: '0.74rem', padding: '0.2rem 0.55rem' }}>
               <Clock size={12} /> EXPONENTIAL RISK
             </span>
           </div>
 
-          <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#06b6d4', marginBottom: '0.5rem' }}>
-            <Flame size={24} />
+          <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-sm)', background: 'rgba(6, 182, 212, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#06b6d4', marginBottom: '0.5rem' }}>
+            <Flame size={22} />
           </div>
 
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff' }}>3. Why NOT Backtracking?</h3>
-          <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: '#38bdf8', fontWeight: 700 }}>
-            Time: O(n!) Worst-Case | Space: O(n) Call Stack
+          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fff' }}>3. Why NOT Backtracking?</h3>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: '#38bdf8', fontWeight: 600 }}>
+            Time: O(n!) Worst-Case | Space: O(n)
           </div>
 
-          <ul style={{ color: 'var(--text-secondary)', fontSize: '0.86rem', lineHeight: 1.7, marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          <ul style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: 1.65, marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
-              <XCircle size={16} color="#f59e0b" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span><strong>Factorial Combinatorial Explosion:</strong> For n=14, 14! = 87.1 billion routes. The browser crashes.</span>
+              <XCircle size={15} color="#ef4444" style={{ flexShrink: 0, marginTop: '3px' }} />
+              <span><strong>Factorial Growth:</strong> For n=14, 14! = 87.1 billion permutations, freezing standard execution threads.</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
-              <XCircle size={16} color="#f59e0b" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span><strong>Unpredictable Pruning:</strong> In uniform distributions, lower bounding fails to prune branches early.</span>
+              <XCircle size={15} color="#ef4444" style={{ flexShrink: 0, marginTop: '3px' }} />
+              <span><strong>Pruning Inefficiency:</strong> In symmetric and uniform graphs, bounding bounds fail to prune early.</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
-              <XCircle size={16} color="#f59e0b" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span><strong>No Memory Reuse:</strong> Recomputes the same subsets repeatedly because it lacks DP table memoization.</span>
+              <XCircle size={15} color="#ef4444" style={{ flexShrink: 0, marginTop: '3px' }} />
+              <span><strong>Redundant Work:</strong> Lacks state memoization, causing duplicate sub-tree evaluations.</span>
             </li>
           </ul>
 
           <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
-            <div style={{ background: '#070b14', border: '1px solid rgba(6, 182, 212, 0.3)', padding: '0.65rem 0.85rem', borderRadius: '8px', fontSize: '0.78rem', color: '#38bdf8' }}>
-              ⚠️ <strong>Limitation:</strong> Impractical for n &gt; 12 in mission-critical systems.
+            <div style={{ background: 'var(--bg-primary)', border: '1px solid rgba(6, 182, 212, 0.25)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', fontSize: '0.78rem', color: '#38bdf8' }}>
+              <strong>Limitation:</strong> Unusable for n &gt; 12 without severe timeout constraints.
             </div>
           </div>
         </div>
