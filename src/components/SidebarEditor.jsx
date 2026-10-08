@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sliders, Plus, Trash2, Gauge, Layers, Eye, ChevronDown, ChevronUp, MapPin } from 'lucide-react';
+import { Sliders, Plus, Trash2, Gauge, Layers, Eye, MapPin } from 'lucide-react';
 import { sounds } from '../utils/soundEffects';
 
 export function SidebarEditor({
@@ -24,9 +24,9 @@ export function SidebarEditor({
   const [showAddForm, setShowAddForm] = useState(false);
 
   const getNodeColor = (weight) => {
-    if (weight >= 9) return '#ef4444';
+    if (weight >= 9) return '#ff3366';
     if (weight >= 7) return '#f97316';
-    if (weight >= 4) return '#eab308';
+    if (weight >= 4) return '#fbbf24';
     return '#10b981';
   };
 
@@ -82,37 +82,37 @@ export function SidebarEditor({
   };
 
   return (
-    <aside style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', minWidth: 0, width: '100%' }}>
+    <aside style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', minWidth: 0, width: '100%' }}>
       
       {/* Solver Configuration Bento Box */}
       <div className="stage-card">
-        <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.45rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <Sliders size={15} color="#38bdf8" />
+        <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid #000000', paddingBottom: '0.65rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Sliders size={17} color="#38bdf8" />
             <span>Algorithm Engine</span>
           </div>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Choose Solver</span>
+          <span className="badge badge-pro" style={{ fontSize: '0.68rem', padding: '0.15rem 0.45rem' }}>Active</span>
         </div>
 
         {/* 3 Solver Mode Pills */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.3rem', background: 'var(--bg-secondary)', padding: '0.25rem', borderRadius: 'var(--radius-sm)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.4rem', background: 'rgba(6, 10, 20, 0.85)', padding: '0.35rem', borderRadius: 'var(--radius-sm)', border: '2px solid #000000', boxShadow: 'var(--neo-shadow-xs)' }}>
           <button
             className={`btn btn-sm ${currentSolver === 'dp' ? 'btn-primary' : 'btn-outline'}`}
-            style={{ padding: '0.35rem 0.2rem', fontSize: '0.72rem' }}
+            style={{ padding: '0.45rem 0.2rem', fontSize: '0.74rem' }}
             onClick={() => handleSolverChange('dp')}
           >
             Bitmask DP
           </button>
           <button
             className={`btn btn-sm ${currentSolver === 'backtracking' ? 'btn-primary' : 'btn-outline'}`}
-            style={{ padding: '0.35rem 0.2rem', fontSize: '0.72rem' }}
+            style={{ padding: '0.45rem 0.2rem', fontSize: '0.74rem' }}
             onClick={() => handleSolverChange('backtracking')}
           >
             B&B
           </button>
           <button
             className={`btn btn-sm ${currentSolver === 'greedy' ? 'btn-primary' : 'btn-outline'}`}
-            style={{ padding: '0.35rem 0.2rem', fontSize: '0.72rem' }}
+            style={{ padding: '0.45rem 0.2rem', fontSize: '0.74rem' }}
             onClick={() => handleSolverChange('greedy')}
           >
             Greedy
@@ -120,10 +120,10 @@ export function SidebarEditor({
         </div>
 
         {/* Toggle Switches */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginTop: '0.2rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-            <label htmlFor="toggle-pruning-react" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Layers size={13} /> Branch & Bound Pruning
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', background: 'rgba(9, 14, 28, 0.75)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '2px solid #000000', boxShadow: 'var(--neo-shadow-xs)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+            <label htmlFor="toggle-pruning-react" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <Layers size={14} color="#38bdf8" /> Branch & Bound Pruning
             </label>
             <input
               type="checkbox"
@@ -136,9 +136,9 @@ export function SidebarEditor({
             />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-            <label htmlFor="toggle-compare-react" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Eye size={13} /> Compare All Overlaid
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+            <label htmlFor="toggle-compare-react" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <Eye size={14} color="#fbbf24" /> Compare All Overlaid
             </label>
             <input
               type="checkbox"
@@ -153,10 +153,10 @@ export function SidebarEditor({
         </div>
 
         {/* Speed Slider */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.2rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Gauge size={12} /> Vehicle Speed:</span>
-            <strong style={{ color: 'var(--accent-blue)' }}>{speed} px/s</strong>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', background: 'rgba(9, 14, 28, 0.75)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '2px solid #000000', boxShadow: 'var(--neo-shadow-xs)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 700 }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><Gauge size={14} color="#38bdf8" /> Vehicle Speed:</span>
+            <span className="badge badge-pro" style={{ fontSize: '0.72rem', padding: '0.15rem 0.45rem' }}>{speed} px/s</span>
           </div>
           <input
             type="range"
@@ -169,17 +169,17 @@ export function SidebarEditor({
       </div>
 
       {/* Facility Triage Nodes List Bento Box */}
-      <div className="stage-card" style={{ flex: 1, minHeight: '320px' }}>
+      <div className="stage-card" style={{ flex: 1, minHeight: '340px' }}>
         
         {/* Header & Add Button */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.45rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <MapPin size={15} color="#ef4444" />
-            <span style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>Facilities ({locations.length})</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid #000000', paddingBottom: '0.65rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <MapPin size={17} color="#ff3366" />
+            <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#fff' }}>Facilities ({locations.length})</span>
           </div>
           <button
             className="btn btn-sm btn-outline"
-            style={{ padding: '0.25rem 0.5rem', fontSize: '0.72rem' }}
+            style={{ padding: '0.35rem 0.65rem', fontSize: '0.74rem' }}
             onClick={() => setShowAddForm(!showAddForm)}
           >
             <Plus size={13} /> {showAddForm ? 'Close' : 'Add New'}
@@ -188,19 +188,19 @@ export function SidebarEditor({
 
         {/* Collapsible Add Form */}
         {showAddForm && (
-          <form onSubmit={handleAddFacility} style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', background: 'var(--bg-secondary)', padding: '0.65rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+          <form onSubmit={handleAddFacility} style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', background: 'rgba(6, 10, 20, 0.9)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', border: '2px solid #000000', boxShadow: 'var(--neo-shadow-sm)' }}>
             <input
               type="text"
               className="form-input"
-              style={{ fontSize: '0.78rem', padding: '0.35rem 0.6rem' }}
+              style={{ fontSize: '0.82rem', padding: '0.45rem 0.75rem' }}
               placeholder="Facility Name (e.g. Trauma ICU)"
               value={newFacilityName}
               onChange={(e) => setNewFacilityName(e.target.value)}
             />
-            <div style={{ display: 'flex', gap: '0.4rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
               <select
                 className="form-select"
-                style={{ flex: 1, fontSize: '0.78rem', padding: '0.35rem 0.5rem' }}
+                style={{ flex: 1, fontSize: '0.82rem', padding: '0.45rem 0.65rem' }}
                 value={newFacilityType}
                 onChange={(e) => setNewFacilityType(e.target.value)}
               >
@@ -211,7 +211,7 @@ export function SidebarEditor({
               <input
                 type="number"
                 className="form-input"
-                style={{ width: '55px', fontSize: '0.78rem', padding: '0.35rem 0.4rem' }}
+                style={{ width: '60px', fontSize: '0.82rem', padding: '0.45rem 0.5rem', textAlign: 'center' }}
                 min="1"
                 max="10"
                 value={newFacilityWeight}
@@ -219,14 +219,14 @@ export function SidebarEditor({
                 title="Urgency Weight (1-10)"
               />
             </div>
-            <button type="submit" className="btn btn-primary btn-sm" style={{ width: '100%' }}>
+            <button type="submit" className="btn btn-primary btn-sm" style={{ width: '100%', marginTop: '0.2rem' }}>
               Add to Map
             </button>
           </form>
         )}
 
         {/* Facility Cards List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', maxHeight: '340px', overflowY: 'auto', paddingRight: '0.15rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', maxHeight: '350px', overflowY: 'auto', paddingRight: '0.2rem' }}>
           {locations.map((loc, idx) => {
             const isSelected = selectedNodeIndex === idx;
             const col = getNodeColor(loc.weight);
@@ -234,27 +234,30 @@ export function SidebarEditor({
               <div
                 key={loc.id || idx}
                 style={{
-                  background: isSelected ? 'rgba(56, 189, 248, 0.12)' : 'var(--bg-secondary)',
-                  border: `1px solid ${isSelected ? 'var(--accent-blue)' : 'var(--border-subtle)'}`,
+                  background: isSelected ? 'rgba(56, 189, 248, 0.22)' : 'rgba(9, 14, 28, 0.85)',
+                  backdropFilter: 'var(--glass-blur)',
+                  border: isSelected ? '2px solid #38bdf8' : '2px solid #000000',
+                  boxShadow: isSelected ? 'var(--neo-shadow-blue)' : 'var(--neo-shadow-xs)',
                   borderRadius: 'var(--radius-sm)',
-                  padding: '0.5rem 0.65rem',
+                  padding: '0.65rem 0.85rem',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '0.35rem',
+                  gap: '0.45rem',
                   cursor: 'pointer',
-                  transition: 'all 0.15s ease'
+                  transition: 'all 0.15s ease',
+                  transform: isSelected ? 'translate(-2px, -2px)' : 'none'
                 }}
                 onClick={() => setSelectedNodeIndex(idx)}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', minWidth: 0 }}>
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: col, flexShrink: 0 }}></span>
-                    <strong style={{ fontSize: '0.78rem', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
+                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: col, border: '1.5px solid #000', boxShadow: '1px 1px 0px #000', flexShrink: 0 }}></span>
+                    <strong style={{ fontSize: '0.82rem', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {loc.name}
                     </strong>
                   </div>
                   <button
-                    style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', padding: '0.2rem' }}
+                    style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1.5px solid #000', borderRadius: '4px', color: '#ff4d7a', cursor: 'pointer', padding: '0.25rem 0.35rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDeleteNode(idx);
@@ -265,9 +268,9 @@ export function SidebarEditor({
                   </button>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                  <span>Urgency Weight: <strong style={{ color: col }}>{loc.weight} / 10</strong></span>
-                  <span style={{ textTransform: 'capitalize', background: 'var(--bg-tertiary)', padding: '0.05rem 0.35rem', borderRadius: '4px', fontSize: '0.65rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                  <span>Urgency: <strong style={{ color: col }}>{loc.weight} / 10</strong></span>
+                  <span style={{ textTransform: 'capitalize', background: '#000', color: '#38bdf8', padding: '0.1rem 0.45rem', borderRadius: '4px', fontSize: '0.68rem', fontWeight: 800, border: '1px solid rgba(255,255,255,0.2)' }}>
                     {loc.type || 'hospital'}
                   </span>
                 </div>
@@ -277,7 +280,7 @@ export function SidebarEditor({
                   min="1"
                   max="10"
                   value={loc.weight}
-                  style={{ accentColor: col, height: '4px' }}
+                  style={{ accentColor: col, height: '6px' }}
                   onChange={(e) => handleWeightChange(idx, e.target.value)}
                   onClick={(e) => e.stopPropagation()}
                 />

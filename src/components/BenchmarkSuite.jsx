@@ -173,29 +173,49 @@ export function BenchmarkSuite({ speed = 100 }) {
         label: 'DP (O(n² 2ⁿ))',
         data: benchmarkData.map((d) => (d.dpAvgMs !== null ? Math.max(0.01, d.dpAvgMs) : null)),
         borderColor: '#10b981',
-        backgroundColor: 'rgba(16, 185, 129, 0.15)',
+        backgroundColor: 'rgba(16, 185, 129, 0.25)',
+        borderWidth: 3,
+        pointBackgroundColor: '#10b981',
+        pointBorderColor: '#000000',
+        pointBorderWidth: 2,
+        pointRadius: 5,
         tension: 0.3
       },
       {
         label: 'Backtracking B&B',
         data: benchmarkData.map((d) => (d.bbAvgMs !== null ? Math.max(0.01, d.bbAvgMs) : null)),
         borderColor: '#06b6d4',
-        backgroundColor: 'rgba(6, 182, 212, 0.15)',
+        backgroundColor: 'rgba(6, 182, 212, 0.25)',
+        borderWidth: 3,
+        pointBackgroundColor: '#06b6d4',
+        pointBorderColor: '#000000',
+        pointBorderWidth: 2,
+        pointRadius: 5,
         tension: 0.3
       },
       {
         label: 'Naive Search (O(n!))',
         data: benchmarkData.map((d) => (d.bbNaiveAvgMs !== null ? Math.max(0.01, d.bbNaiveAvgMs) : null)),
-        borderColor: '#ef4444',
-        backgroundColor: 'rgba(239, 68, 68, 0.15)',
-        borderDash: [5, 5],
+        borderColor: '#ff3366',
+        backgroundColor: 'rgba(255, 51, 102, 0.25)',
+        borderDash: [6, 6],
+        borderWidth: 3,
+        pointBackgroundColor: '#ff3366',
+        pointBorderColor: '#000000',
+        pointBorderWidth: 2,
+        pointRadius: 5,
         tension: 0.3
       },
       {
         label: 'Greedy (O(n²))',
         data: benchmarkData.map((d) => (d.greedyAvgMs !== null ? Math.max(0.005, d.greedyAvgMs) : null)),
-        borderColor: '#f59e0b',
-        backgroundColor: 'rgba(245, 158, 11, 0.15)',
+        borderColor: '#fbbf24',
+        backgroundColor: 'rgba(251, 191, 36, 0.25)',
+        borderWidth: 3,
+        pointBackgroundColor: '#fbbf24',
+        pointBorderColor: '#000000',
+        pointBorderWidth: 2,
+        pointRadius: 5,
         tension: 0.3
       }
     ]
@@ -207,9 +227,9 @@ export function BenchmarkSuite({ speed = 100 }) {
       {
         label: 'Greedy Suboptimality Gap (%)',
         data: benchmarkData.filter((d) => d.greedyGapPct !== null).map((d) => d.greedyGapPct.toFixed(2)),
-        backgroundColor: 'rgba(245, 158, 11, 0.7)',
-        borderColor: '#f59e0b',
-        borderWidth: 1.5,
+        backgroundColor: '#fbbf24',
+        borderColor: '#000000',
+        borderWidth: 2,
         borderRadius: 4
       }
     ]
@@ -222,15 +242,17 @@ export function BenchmarkSuite({ speed = 100 }) {
         label: 'B&B Explored Nodes',
         data: benchmarkData.filter((d) => d.bbAvgNodes !== null).map((d) => d.bbAvgNodes),
         borderColor: '#06b6d4',
-        backgroundColor: 'rgba(6, 182, 212, 0.25)',
+        backgroundColor: 'rgba(6, 182, 212, 0.35)',
+        borderWidth: 3,
         fill: true,
         tension: 0.3
       },
       {
         label: 'Naive BT Explored Nodes (n!)',
         data: benchmarkData.filter((d) => d.bbAvgNodes !== null).map((d) => d.bbNaiveAvgNodes),
-        borderColor: '#ef4444',
-        borderDash: [4, 4],
+        borderColor: '#ff3366',
+        borderDash: [5, 5],
+        borderWidth: 3,
         tension: 0.3
       }
     ]
@@ -243,12 +265,13 @@ export function BenchmarkSuite({ speed = 100 }) {
       <div className="stage-card">
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 700 }}>
               <label htmlFor="k-trials-select" style={{ color: 'var(--text-secondary)' }}>Averaging Trials:</label>
               <select
                 id="k-trials-select"
                 className="form-select"
+                style={{ width: '130px' }}
                 value={kTrials}
                 onChange={(e) => setKTrials(Number(e.target.value))}
                 disabled={isRunning}
@@ -277,11 +300,11 @@ export function BenchmarkSuite({ speed = 100 }) {
         </div>
 
         {/* Progress Bar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.5rem' }}>
-          <div style={{ width: '100%', height: '8px', background: 'var(--bg-secondary)', borderRadius: '9999px', overflow: 'hidden', border: '1px solid var(--border-subtle)' }}>
-            <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(90deg, #0284c7, #10b981)', transition: 'width 0.2s ease' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginTop: '0.65rem' }}>
+          <div style={{ width: '100%', height: '10px', background: 'rgba(6, 10, 20, 0.9)', borderRadius: '4px', overflow: 'hidden', border: '2px solid #000000', boxShadow: 'var(--neo-shadow-xs)' }}>
+            <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(90deg, #38bdf8, #10b981)', transition: 'width 0.2s ease' }} />
           </div>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{statusText}</span>
+          <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600 }}>{statusText}</span>
         </div>
       </div>
 
@@ -289,9 +312,11 @@ export function BenchmarkSuite({ speed = 100 }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(480px, 1fr))', gap: '1.5rem' }}>
         
         {/* Runtime Scaling (Full width) */}
-        <div className="stage-card" style={{ gridColumn: '1 / -1', height: '380px' }}>
-          <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <TrendingUp size={16} color="#10b981" />
+        <div className="stage-card" style={{ gridColumn: '1 / -1', height: '400px' }}>
+          <div style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.55rem', borderBottom: '2px solid #000', paddingBottom: '0.5rem' }}>
+            <div style={{ width: '28px', height: '28px', background: '#10b981', borderRadius: '4px', border: '1.5px solid #000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '1px 1px 0px #000' }}>
+              <TrendingUp size={18} color="#000000" />
+            </div>
             <span>Execution Runtime vs Number of Locations (n) — Logarithmic Scale</span>
           </div>
           <div style={{ flex: 1, position: 'relative', width: '100%', height: '100%' }}>
@@ -303,26 +328,28 @@ export function BenchmarkSuite({ speed = 100 }) {
                 scales: {
                   y: {
                     type: 'logarithmic',
-                    title: { display: true, text: 'Runtime (ms - log scale)', color: '#94a3b8' },
-                    grid: { color: 'rgba(51, 65, 85, 0.3)' },
-                    ticks: { color: '#94a3b8' }
+                    title: { display: true, text: 'Runtime (ms - log scale)', color: '#94a3b8', font: { weight: 'bold' } },
+                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                    ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } }
                   },
                   x: {
-                    title: { display: true, text: 'Number of Locations (n)', color: '#94a3b8' },
-                    grid: { color: 'rgba(51, 65, 85, 0.3)' },
-                    ticks: { color: '#94a3b8' }
+                    title: { display: true, text: 'Number of Locations (n)', color: '#94a3b8', font: { weight: 'bold' } },
+                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                    ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } }
                   }
                 },
-                plugins: { legend: { labels: { color: '#cbd5e1' } } }
+                plugins: { legend: { labels: { color: '#ffffff', font: { weight: 'bold' } } } }
               }}
             />
           </div>
         </div>
 
         {/* Greedy Gap */}
-        <div className="stage-card" style={{ height: '340px' }}>
-          <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Zap size={16} color="#f59e0b" />
+        <div className="stage-card" style={{ height: '360px' }}>
+          <div style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.55rem', borderBottom: '2px solid #000', paddingBottom: '0.5rem' }}>
+            <div style={{ width: '28px', height: '28px', background: '#fbbf24', borderRadius: '4px', border: '1.5px solid #000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '1px 1px 0px #000' }}>
+              <Zap size={18} color="#000000" />
+            </div>
             <span>Greedy Heuristic Optimality Gap (%) vs Optimal DP</span>
           </div>
           <div style={{ flex: 1, position: 'relative', width: '100%', height: '100%' }}>
@@ -333,22 +360,24 @@ export function BenchmarkSuite({ speed = 100 }) {
                 maintainAspectRatio: false,
                 scales: {
                   y: {
-                    title: { display: true, text: 'Optimality Gap %', color: '#94a3b8' },
-                    grid: { color: 'rgba(51, 65, 85, 0.3)' },
-                    ticks: { color: '#94a3b8' }
+                    title: { display: true, text: 'Optimality Gap %', color: '#94a3b8', font: { weight: 'bold' } },
+                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                    ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } }
                   },
-                  x: { grid: { color: 'rgba(51, 65, 85, 0.3)' }, ticks: { color: '#94a3b8' } }
+                  x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } } }
                 },
-                plugins: { legend: { labels: { color: '#cbd5e1' } } }
+                plugins: { legend: { labels: { color: '#ffffff', font: { weight: 'bold' } } } }
               }}
             />
           </div>
         </div>
 
         {/* Pruning Efficiency */}
-        <div className="stage-card" style={{ height: '340px' }}>
-          <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Cpu size={16} color="#06b6d4" />
+        <div className="stage-card" style={{ height: '360px' }}>
+          <div style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.55rem', borderBottom: '2px solid #000', paddingBottom: '0.5rem' }}>
+            <div style={{ width: '28px', height: '28px', background: '#06b6d4', borderRadius: '4px', border: '1.5px solid #000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '1px 1px 0px #000' }}>
+              <Cpu size={18} color="#000000" />
+            </div>
             <span>Branch & Bound Pruning Efficiency (Nodes Explored)</span>
           </div>
           <div style={{ flex: 1, position: 'relative', width: '100%', height: '100%' }}>
@@ -360,13 +389,13 @@ export function BenchmarkSuite({ speed = 100 }) {
                 scales: {
                   y: {
                     type: 'logarithmic',
-                    title: { display: true, text: 'Nodes Explored (log scale)', color: '#94a3b8' },
-                    grid: { color: 'rgba(51, 65, 85, 0.3)' },
-                    ticks: { color: '#94a3b8' }
+                    title: { display: true, text: 'Nodes Explored (log scale)', color: '#94a3b8', font: { weight: 'bold' } },
+                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                    ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } }
                   },
-                  x: { grid: { color: 'rgba(51, 65, 85, 0.3)' }, ticks: { color: '#94a3b8' } }
+                  x: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#cbd5e1', font: { family: 'JetBrains Mono' } } }
                 },
-                plugins: { legend: { labels: { color: '#cbd5e1' } } }
+                plugins: { legend: { labels: { color: '#ffffff', font: { weight: 'bold' } } } }
               }}
             />
           </div>
@@ -377,29 +406,29 @@ export function BenchmarkSuite({ speed = 100 }) {
       {/* Tabular Benchmark Output */}
       {benchmarkData.length > 0 && (
         <div className="stage-card">
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', fontFamily: 'JetBrains Mono' }}>
+          <div style={{ overflowX: 'auto', borderRadius: 'var(--radius-sm)', border: '2px solid #000', boxShadow: 'var(--neo-shadow-xs)' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem', fontFamily: 'JetBrains Mono' }}>
               <thead>
-                <tr style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)', textAlign: 'left', color: '#fff' }}>
-                  <th style={{ padding: '0.65rem 0.85rem' }}>Instances (n)</th>
-                  <th style={{ padding: '0.65rem 0.85rem' }}>DP Avg Runtime</th>
-                  <th style={{ padding: '0.65rem 0.85rem' }}>B&B Avg Runtime</th>
-                  <th style={{ padding: '0.65rem 0.85rem' }}>Naive BT Runtime</th>
-                  <th style={{ padding: '0.65rem 0.85rem' }}>Greedy Runtime</th>
-                  <th style={{ padding: '0.65rem 0.85rem' }}>B&B Nodes Explored</th>
-                  <th style={{ padding: '0.65rem 0.85rem' }}>Greedy Gap %</th>
+                <tr style={{ background: 'rgba(6, 10, 20, 0.95)', borderBottom: '2px solid #000000', textAlign: 'left', color: '#fff' }}>
+                  <th style={{ padding: '0.75rem 1rem' }}>Instances (n)</th>
+                  <th style={{ padding: '0.75rem 1rem' }}>DP Avg Runtime</th>
+                  <th style={{ padding: '0.75rem 1rem' }}>B&B Avg Runtime</th>
+                  <th style={{ padding: '0.75rem 1rem' }}>Naive BT Runtime</th>
+                  <th style={{ padding: '0.75rem 1rem' }}>Greedy Runtime</th>
+                  <th style={{ padding: '0.75rem 1rem' }}>B&B Nodes Explored</th>
+                  <th style={{ padding: '0.75rem 1rem' }}>Greedy Gap %</th>
                 </tr>
               </thead>
               <tbody>
                 {benchmarkData.map((r) => (
-                  <tr key={r.n} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                    <td style={{ padding: '0.65rem 0.85rem', fontWeight: 700, color: '#38bdf8' }}>n = {r.n}</td>
-                    <td style={{ padding: '0.65rem 0.85rem' }}>{r.dpAvgMs !== null ? `${r.dpAvgMs.toFixed(2)} ms` : '-'}</td>
-                    <td style={{ padding: '0.65rem 0.85rem' }}>{r.bbAvgMs !== null ? `${r.bbAvgMs.toFixed(2)} ms` : '-'}</td>
-                    <td style={{ padding: '0.65rem 0.85rem' }}>{r.bbNaiveAvgMs !== null ? `${r.bbNaiveAvgMs.toFixed(2)} ms` : '-'}</td>
-                    <td style={{ padding: '0.65rem 0.85rem' }}>{r.greedyAvgMs !== null ? `${r.greedyAvgMs.toFixed(3)} ms` : '-'}</td>
-                    <td style={{ padding: '0.65rem 0.85rem' }}>{r.bbAvgNodes !== null ? r.bbAvgNodes.toLocaleString() : '-'}</td>
-                    <td style={{ padding: '0.65rem 0.85rem' }}>
+                  <tr key={r.n} style={{ borderBottom: '1.5px solid #000000', background: 'rgba(15, 23, 42, 0.65)' }}>
+                    <td style={{ padding: '0.75rem 1rem', fontWeight: 800, color: '#38bdf8' }}>n = {r.n}</td>
+                    <td style={{ padding: '0.75rem 1rem', color: '#34d399', fontWeight: 700 }}>{r.dpAvgMs !== null ? `${r.dpAvgMs.toFixed(2)} ms` : '-'}</td>
+                    <td style={{ padding: '0.75rem 1rem', color: '#22d3ee' }}>{r.bbAvgMs !== null ? `${r.bbAvgMs.toFixed(2)} ms` : '-'}</td>
+                    <td style={{ padding: '0.75rem 1rem', color: '#ff3366' }}>{r.bbNaiveAvgMs !== null ? `${r.bbNaiveAvgMs.toFixed(2)} ms` : '-'}</td>
+                    <td style={{ padding: '0.75rem 1rem', color: '#fbbf24' }}>{r.greedyAvgMs !== null ? `${r.greedyAvgMs.toFixed(3)} ms` : '-'}</td>
+                    <td style={{ padding: '0.75rem 1rem' }}>{r.bbAvgNodes !== null ? r.bbAvgNodes.toLocaleString() : '-'}</td>
+                    <td style={{ padding: '0.75rem 1rem' }}>
                       {r.greedyGapPct !== null ? (
                         <span className={`badge ${r.greedyGapPct > 15 ? 'badge-danger' : 'badge-warning'}`}>
                           {r.greedyGapPct.toFixed(2)}%

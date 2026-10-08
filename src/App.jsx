@@ -12,7 +12,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { PRESET_SCENARIOS } from './algorithms/presets';
 import { RouteSolvers } from './algorithms/solvers';
 import { sounds } from './utils/soundEffects';
-import { Dices, Trash2, Sparkles } from 'lucide-react';
+import { Dices, Trash2, Sparkles, Compass } from 'lucide-react';
 
 export function App() {
   const [activeTab, setActiveTab] = useState('canvas'); // 'canvas' | 'dp-stepper' | 'benchmark' | 'why-dp'
@@ -174,15 +174,17 @@ export function App() {
             <div className="router-layout-grid">
               
               {/* Left Stage */}
-              <section style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem', minWidth: 0 }}>
+              <section style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', minWidth: 0 }}>
                 
                 {/* Presets & Scenario Toolbar */}
-                <div className="stage-card" style={{ padding: '0.75rem 1.15rem' }}>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
+                <div className="stage-card" style={{ padding: '0.85rem 1.25rem' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.85rem' }}>
                     
                     {/* Preset Chips */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', flex: 1 }}>
-                      <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Scenarios:</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap', flex: 1 }}>
+                      <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                        <Compass size={15} /> Scenarios:
+                      </span>
                       <div className="preset-pills-bar">
                         {PRESET_SCENARIOS.map((p) => {
                           const isActive = p.id === currentPresetId;
@@ -200,13 +202,13 @@ export function App() {
                     </div>
 
                     {/* Generator Controls */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', background: 'var(--bg-primary)', padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                        <label htmlFor="random-n-field" style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', fontWeight: 600 }}>n =</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(6, 10, 20, 0.9)', padding: '0.25rem 0.65rem', borderRadius: 'var(--radius-sm)', border: '2px solid #000000', boxShadow: 'var(--neo-shadow-xs)' }}>
+                        <label htmlFor="random-n-field" style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: 800 }}>n =</label>
                         <input
                           type="number"
                           id="random-n-field"
-                          style={{ width: '38px', background: 'transparent', border: 'none', color: '#fff', textAlign: 'center', fontSize: '0.8rem', fontWeight: 700, outline: 'none' }}
+                          style={{ width: '42px', background: 'transparent', border: 'none', color: '#fff', textAlign: 'center', fontSize: '0.85rem', fontWeight: 800, outline: 'none' }}
                           min="3"
                           max="18"
                           value={randomN}
@@ -214,18 +216,18 @@ export function App() {
                         />
                       </div>
                       <button className="btn btn-secondary btn-sm" onClick={handleGenerateRandom} title="Generate Random Graph">
-                        <Dices size={13} /> Random
+                        <Dices size={14} /> Random
                       </button>
                       <button className="btn btn-outline btn-sm" onClick={handleClear} title="Clear All Nodes">
-                        <Trash2 size={13} /> Clear
+                        <Trash2 size={14} /> Clear
                       </button>
                     </div>
 
                   </div>
 
                   {currentPreset && (
-                    <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.5rem', marginTop: '0.25rem' }}>
-                      <strong>Premise:</strong> {currentPreset.description}
+                    <div style={{ fontSize: '0.82rem', color: '#cbd5e1', borderTop: '2px solid #000000', paddingTop: '0.65rem', marginTop: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <strong style={{ color: '#fbbf24' }}>Premise:</strong> {currentPreset.description}
                     </div>
                   )}
                 </div>
@@ -320,7 +322,7 @@ export function App() {
       {/* Floating Toast Notification */}
       {toastMessage && (
         <div className="toast-box">
-          <Sparkles size={15} color="#38bdf8" />
+          <Sparkles size={16} color="#38bdf8" />
           <span>{toastMessage}</span>
         </div>
       )}
